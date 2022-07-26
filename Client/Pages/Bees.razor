@@ -1,0 +1,25 @@
+﻿@page "/bees"
+@using Imkery.Entities
+
+<MudPaper>
+    <CollectionGrid TItem="Bee" @ref="CollectionGrid" ShowDeleteButton="true" ShowEditButton="true" />
+</MudPaper>
+
+@code {
+
+    public CollectionGrid<Bee> CollectionGrid { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CollectionGrid.Fields.Add(new CollectionField() { Caption = "Id", PropertyPath = "Id", CanSort=true });
+            CollectionGrid.Fields.Add(new CollectionField() { Caption = "Naam", PropertyPath = "Name", CanSort=true });
+        }
+    }
+}
