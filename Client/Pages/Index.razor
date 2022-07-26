@@ -1,9 +1,13 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Imkery</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudAlert Severity="Severity.Warning">
+    This site is under heavy development, visit
+    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" 
+    Href="https://github.com/MauricePonte/Imkery" Target="_blank"/>
+    for updates.
+</MudAlert>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<MudText Typo="Typo.h4">Welcome to imkery</MudText>
+<MudText Typo="Typo.body1"></MudText>

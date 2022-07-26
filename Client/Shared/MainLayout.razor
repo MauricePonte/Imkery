@@ -1,37 +1,44 @@
 ﻿@using MudBlazor.Utilities
 @inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-
-<MudThemeProvider Theme="MyCustomTheme" />
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode"/>
 <MudDialogProvider />
 <MudSnackbarProvider />
 
+<MudLayout>
+    <MudAppBar>
+        <MudIcon Icon="@Icons.Filled.Hive" Color="Color.Warning" Size="Size.Large"/>
+        <MudText Typo="Typo.h3">Imkery</MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" Variant="@DrawerVariant.Temporary">
+        <NavMenu/>
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Medium">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
 @code {
-
-
-    MudTheme MyCustomTheme = new MudTheme()
+    private bool _drawerOpen = false;
+    private bool _isDarkMode;
+    private MudThemeProvider _mudThemeProvider;
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
         {
-            Palette = new Palette()
-            {
-                Primary = new MudColor("#044a83"),
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            StateHasChanged();
+        }
+    }
 
-                Secondary = new MudColor("#0580f5")
-            }
-        };
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
 }
