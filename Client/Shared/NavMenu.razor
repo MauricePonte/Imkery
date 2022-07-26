@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
 <MudNavMenu>
     <AuthorizeView>
         <Authorized>
@@ -11,13 +13,14 @@
         <NotAuthorized>
             <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
             <MudNavLink Href="authentication/login" Match="NavLinkMatch.All">Sign in</MudNavLink>
-             <MudNavLink Href="authentication/register" Match="NavLinkMatch.All">Register</MudNavLink>
+            <MudNavLink Href="authentication/register" Match="NavLinkMatch.All">Register</MudNavLink>
             <MudNavLink Href="bees" Match="NavLinkMatch.All">CollectionGrid</MudNavLink>
         </NotAuthorized>
     </AuthorizeView>
 </MudNavMenu>
 
 @code {
+
     private async void BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();
