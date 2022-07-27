@@ -82,9 +82,9 @@ namespace Imkery.Client.Components
         public async Task<bool> DeleteItem(TItem item)
         {
             bool? result = await DialogService.ShowMessageBox(
-             "Verwijderen",
-             $"Weet u zeker dat u '{item.GetDescription()}' wilt verwijderen?",
-             yesText: "Ja", cancelText: "Nee");
+             "Delete",
+             $"Are you sure you want to delete '{item.GetDescription()}'?",
+             yesText: "Yes", cancelText: "No");
             if (result.HasValue && result.Value)
             {
                 ChangingItems.Add(item);
