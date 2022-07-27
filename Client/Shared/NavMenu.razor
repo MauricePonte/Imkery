@@ -3,7 +3,6 @@
 
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
-
 <MudNavMenu>
     <AuthorizeView>
         <Authorized>
@@ -20,6 +19,7 @@
 </MudNavMenu>
 
 @code {
+
     private async void BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();

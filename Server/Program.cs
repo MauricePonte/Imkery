@@ -1,3 +1,6 @@
+using Imkery.Data.Storage;
+using Imkery.Data.Storage.Core;
+using Imkery.Entities;
 using Imkery.Server.Data;
 using Imkery.Server.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -15,6 +18,11 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddDbContext<ImkeryDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("ImkerySqlConnection")));
+
+builder.Services.AddImkeryRepositories();
+
 builder.Services.AddIdentityServer()
     .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
@@ -23,6 +31,7 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
 
 var app = builder.Build();
 
@@ -50,6 +59,14 @@ app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();
 
+using (var scope = app.Services.CreateScope())
+{
+    var databaseContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+    databaseContext?.Database.EnsureCreated();
+
+    var databaseContextImkery = scope.ServiceProvider.GetService<ImkeryDbContext>();
+    databaseContextImkery?.Database.EnsureCreated();
+}
 
 app.MapRazorPages();
 app.MapControllers();
