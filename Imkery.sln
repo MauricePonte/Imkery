@@ -7,13 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imkery.Server", "Server\Imk
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imkery.Client", "Client\Imkery.Client.csproj", "{203EA9D2-6A4F-4854-A25C-10F2913FDE0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imkery.Shared", "Shared\Imkery.Shared.csproj", "{A8BBFF17-7B94-43F0-875C-24067A40E646}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imkery.Entities", "Imkery.Entities\Imkery.Entities.csproj", "{1B10EF01-242C-4FC9-9091-537F3583B455}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imkery.Entities", "Imkery.Entities\Imkery.Entities.csproj", "{1B10EF01-242C-4FC9-9091-537F3583B455}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imkery.API.Client", "Imkery.API.Client\Imkery.API.Client.csproj", "{4B8C4EB2-1965-437A-AD11-3B65151DB073}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imkery.API.Client", "Imkery.API.Client\Imkery.API.Client.csproj", "{4B8C4EB2-1965-437A-AD11-3B65151DB073}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imkery.Data.Storage", "Imkery.Data.Storage\Imkery.Data.Storage.csproj", "{108603CC-0E52-458A-8BC2-B634FE7A8E4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imkery.Data.Storage", "Imkery.Data.Storage\Imkery.Data.Storage.csproj", "{108603CC-0E52-458A-8BC2-B634FE7A8E4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{203EA9D2-6A4F-4854-A25C-10F2913FDE0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{203EA9D2-6A4F-4854-A25C-10F2913FDE0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{203EA9D2-6A4F-4854-A25C-10F2913FDE0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A8BBFF17-7B94-43F0-875C-24067A40E646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8BBFF17-7B94-43F0-875C-24067A40E646}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8BBFF17-7B94-43F0-875C-24067A40E646}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8BBFF17-7B94-43F0-875C-24067A40E646}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1B10EF01-242C-4FC9-9091-537F3583B455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1B10EF01-242C-4FC9-9091-537F3583B455}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B10EF01-242C-4FC9-9091-537F3583B455}.Release|Any CPU.ActiveCfg = Release|Any CPU

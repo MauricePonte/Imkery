@@ -5,31 +5,20 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Imkery.API.Client
+namespace Imkery.API.Client.Core
 {
     public class BaseClient
     {
-        ITokenStorage _tokenProvider;
         HttpClient _httpClient;
         protected IApiConfiguration _settings;
-        public BaseClient(HttpClient httpClient, ITokenStorage tokenProvider, IApiConfiguration settings)
+        public BaseClient(HttpClient httpClient, IApiConfiguration settings)
         {
-            _tokenProvider = tokenProvider;
             _httpClient = httpClient;
             _settings = settings;
         }
 
-        public async Task<HttpClient> GetHttpClient(bool useToken = true)
+        public async Task<HttpClient> GetHttpClient()
         {
-            if (useToken)
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await _tokenProvider.GetToken());
-            }
-            else
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = null;
-
-            }
             return _httpClient;
 
         }

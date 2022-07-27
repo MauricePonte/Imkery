@@ -1,4 +1,4 @@
-﻿using Imkery.API.Client;
+﻿using Imkery.API.Client.Core;
 
 internal class ImkeryClientConfigurationService : IApiConfiguration
 {
@@ -13,10 +13,5 @@ internal class ImkeryClientConfigurationService : IApiConfiguration
     {
         return _configuration["APIEndPoint"];
 
-    }
-
-    public string GetTokenEndpoint()
-    {
-        return _configuration["TokenEndPoint"];
     }
 }

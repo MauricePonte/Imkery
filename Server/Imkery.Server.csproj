@@ -20,7 +20,6 @@
     <ProjectReference Include="..\Imkery.API.Client\Imkery.API.Client.csproj" />
     <ProjectReference Include="..\Imkery.Data.Storage\Imkery.Data.Storage.csproj" />
     <ProjectReference Include="..\Imkery.Entities\Imkery.Entities.csproj" />
-    <ProjectReference Include="..\Shared\Imkery.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

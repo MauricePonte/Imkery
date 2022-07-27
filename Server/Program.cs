@@ -1,4 +1,5 @@
 using Imkery.Data.Storage;
+using Imkery.Data.Storage.Core;
 using Imkery.Entities;
 using Imkery.Server.Data;
 using Imkery.Server.Models;
@@ -65,16 +66,6 @@ using (var scope = app.Services.CreateScope())
 
     var databaseContextImkery = scope.ServiceProvider.GetService<ImkeryDbContext>();
     databaseContextImkery?.Database.EnsureCreated();
-
-    if (databaseContextImkery.Bees.Count() == 0)
-    {
-        for (int i = 0; i < 100; i++)
-        {
-            databaseContextImkery.Add(new Bee() { Id = Guid.NewGuid(), Name = "Test bij " + i.ToString() });
-        }
-        databaseContextImkery.SaveChanges();
-
-    }
 }
 
 app.MapRazorPages();

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Imkery.API.Client
+namespace Imkery.API.Client.Core
 {
     public class FilterPagingOptions
     {

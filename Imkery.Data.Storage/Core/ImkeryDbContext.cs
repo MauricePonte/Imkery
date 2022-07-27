@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Imkery.Data.Storage
+namespace Imkery.Data.Storage.Core
 {
     public class ImkeryDbContext : DbContext
     {
@@ -17,7 +17,6 @@ namespace Imkery.Data.Storage
         {
         }
 
-        public DbSet<Bee> Bees { get; set; }
 
     }
 }

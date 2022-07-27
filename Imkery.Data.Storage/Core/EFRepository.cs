@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Imkery.Data.Storage
+namespace Imkery.Data.Storage.Core
 {
     public abstract class EFRepository
     {
@@ -93,7 +93,7 @@ namespace Imkery.Data.Storage
             else
             {
                 var item = await DbSet.FindAsync(id);
-                if(item == null)
+                if (item == null)
                 {
                     return null;
                 }
@@ -133,7 +133,7 @@ namespace Imkery.Data.Storage
                 DbContext.Entry(loadedEntity).State = EntityState.Detached;
 
                 var dbCollection = (loadedEntity.GetType().GetProperty(collection.Metadata.Name).GetValue(loadedEntity) as IEnumerable<object>).ToList();
-                var currenentValues =collection.CurrentValue.Cast<object>();
+                var currenentValues = collection.CurrentValue.Cast<object>();
                 foreach (var itemInDb in dbCollection)
                 {
                     if (currenentValues.Where(b => GetKey(b) == GetKey(itemInDb)).Count() == 0)

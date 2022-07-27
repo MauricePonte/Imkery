@@ -1,8 +1,7 @@
-﻿namespace Imkery.API.Client
+﻿namespace Imkery.API.Client.Core
 {
     public interface IApiConfiguration
     {
-        string GetTokenEndpoint();
         string GetAPIEndPoint();
     }
 }

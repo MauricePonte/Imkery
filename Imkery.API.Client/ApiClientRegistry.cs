@@ -1,4 +1,5 @@
-﻿using Imkery.Entities;
+﻿using Imkery.API.Client.Core;
+using Imkery.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,8 @@ namespace Imkery.API.Client
 {
     public class ApiClientRegistry
     {
-        public ApiClientRegistry(BeesClient imkeryClient)
+        public ApiClientRegistry()
         {
-            _registry.Add(typeof(Bee), imkeryClient);
         }
         private Dictionary<Type, BaseClient> _registry { get; set; } = new Dictionary<Type, BaseClient>();
 

@@ -1,9 +1,10 @@
 using Imkery.Client;
-using Imkery.API.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
+using Imkery.API.Client.Core;
+using Imkery.API.Client;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -13,7 +14,6 @@ builder.Services.AddHttpClient("Imkery.ServerAPI", client => client.BaseAddress 
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
 builder.Services.AddScoped(typeof(IApiConfiguration), typeof(ImkeryClientConfigurationService));
-builder.Services.AddScoped(typeof(ITokenStorage), typeof(ImkeryTokenStorage));
 
 //Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Imkery.ServerAPI"));

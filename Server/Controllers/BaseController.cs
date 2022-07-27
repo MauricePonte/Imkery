@@ -1,5 +1,5 @@
-﻿using Imkery.API.Client;
-using Imkery.Data.Storage;
+﻿using Imkery.API.Client.Core;
+using Imkery.Data.Storage.Core;
 using Imkery.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;

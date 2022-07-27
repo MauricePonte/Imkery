@@ -5,12 +5,12 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Imkery.API.Client
+namespace Imkery.API.Client.Core
 {
     public class BaseCRUDClient<T> : BaseClient
     {
         private string _area;
-        public BaseCRUDClient(string apiArea, HttpClient httpClient, ITokenStorage tokenProvider, IApiConfiguration settings) : base(httpClient, tokenProvider, settings)
+        public BaseCRUDClient(string apiArea, HttpClient httpClient, IApiConfiguration settings) : base(httpClient, settings)
         {
             _area = apiArea;
         }
@@ -23,7 +23,7 @@ namespace Imkery.API.Client
                 return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             }
             ThrowResponseException(response);
-            return default(T);
+            return default;
         }
 
         public virtual async Task<ICollection<T>> GetCollectionAsync(FilterPagingOptions filterPagingOptions)
@@ -33,7 +33,7 @@ namespace Imkery.API.Client
 
         public async Task<ICollection<T>> GetItemsAsync(FilterPagingOptions filterPagingOptions, bool withAutherization = true)
         {
-            var response = await (await GetHttpClient(withAutherization).ConfigureAwait(false)).GetAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "?filterpaging=", filterPagingOptions.ToQueryString())).ConfigureAwait(false);
+            var response = await (await GetHttpClient().ConfigureAwait(false)).GetAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "?filterpaging=", filterPagingOptions.ToQueryString())).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<ICollection<T>>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
@@ -70,7 +70,7 @@ namespace Imkery.API.Client
                 return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             }
             ThrowResponseException(response);
-            return default(T);
+            return default;
         }
         public async Task<T> EditAsync(Guid id, T item)
         {
@@ -80,7 +80,7 @@ namespace Imkery.API.Client
                 return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             }
             ThrowResponseException(response);
-            return default(T);
+            return default;
         }
     }
 }

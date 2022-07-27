@@ -10,7 +10,6 @@ namespace Imkery.Data.Storage
     {
         public static void AddImkeryRepositories(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<BeeRepository>();
         }
 
     }
