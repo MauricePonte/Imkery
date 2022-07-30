@@ -1,0 +1,35 @@
+﻿@page "/test"
+@page "/test/{itemId:guid}"
+@using Imkery.Client.Components.ObjectFormComponent
+@using Imkery.Entities
+
+<MudPaper>
+    <ObjectForm TItem="Test" ItemId="@ItemId" ReturnUrl="@((item=> "tests"))" @ref="TestObjectForm" />
+</MudPaper>
+
+
+@code
+{
+    public ObjectForm<Test> TestObjectForm { get; set; }
+
+    [Parameter]
+    public Guid ItemId { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            TestObjectForm.ObjectFields.Add(new ObjectField<Test, string>(nameof(Test.Name), "Name"));
+            TestObjectForm.ObjectFields.Add(new DeviatingUIField<Test>(GetFragment()));
+        }
+    }
+
+    public RenderFragment<Test> GetFragment() => context => (__builder) =>
+    {
+        <MudNumericField @bind-Value="context.Age" Label="Age"/>
+    };
+    
+
+
+
+ }

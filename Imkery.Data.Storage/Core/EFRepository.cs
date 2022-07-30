@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Reflection;
+using FluentValidation;
+using Imkery.Entities;
 
 namespace Imkery.Data.Storage.Core
 {
@@ -20,7 +22,7 @@ namespace Imkery.Data.Storage.Core
             get; set;
         }
     }
-    public abstract class EFRepository<T> : EFRepository where T : class, new()
+    public abstract class EFRepository<T> : EFRepository where T : class, IEntity<T>, new()
     {
 
         public EFRepository(ImkeryDbContext dbContext)
@@ -182,6 +184,11 @@ namespace Imkery.Data.Storage.Core
         public async Task<int> GetCountAsync(Dictionary<string, string> filterValues)
         {
             return await ApplyFiltering(DbSet, filterValues).CountAsync().ConfigureAwait(false);
+        }
+
+        public virtual AbstractValidator<T> GetValidator()
+        {
+            return new T().GetValidator();
         }
 
 

@@ -1,69 +1,75 @@
 ﻿@using Imkery.Entities
 @using MudBlazor
-@typeparam TItem where TItem : IEntity;
+@typeparam TItem where TItem : class, IEntity<TItem>, new();
 @inherits CollectionGridBase<TItem>;
 
-<MudTable ServerData="@(new Func<TableState, Task<TableData<TItem>>>(GetCurrentCollectionAsync))" Dense="false" Hover="true"  Striped="true" @bind-SelectedItem="CurrentItem" @ref="_table">
-<ToolBarContent>
+<MudTable ServerData="@(new Func<TableState, Task<TableData<TItem>>>(GetCurrentCollectionAsync))" Dense="false" Hover="true" Striped="true" @bind-SelectedItem="CurrentItem" @ref="_table">
+    <ToolBarContent>
         <MudTextField T="string" ValueChanged="@(s=>DoSearch(s))" Placeholder="Zoeken..." Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        @if (ShowAddButton)
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(async () => await AddItem())" />
+        }
     </ToolBarContent>
     <HeaderContent>
-        @foreach(CollectionField field in Fields)
+        @foreach (CollectionField field in Fields)
+        {
+            @if (field.CanSort)
             {
-                @if(field.CanSort)
-                {
-                    <MudTh><MudTableSortLabel SortLabel="@field.PropertyPath" T="TItem">@field.Caption</MudTableSortLabel></MudTh>
-                }
-                else
-                {
-                    <MudTh>@field.Caption</MudTh>
-                }
-        
+                <MudTh><MudTableSortLabel SortLabel="@field.PropertyPath" T="TItem">@field.Caption</MudTableSortLabel></MudTh>
+            }
+            else
+            {
+                <MudTh>@field.Caption</MudTh>
+            }
+
         }
-        @if(ShowDeleteButton)
+        @if (ShowDeleteButton)
         {
-           <MudTh></MudTh>
+            <MudTh></MudTh>
         }
-        @if(ShowEditButton)
+        @if (ShowEditButton)
         {
-           <MudTh></MudTh>
+            <MudTh></MudTh>
         }
-        
+
     </HeaderContent>
     <RowTemplate>
-         @foreach(CollectionField field in Fields)
-            {
-                <MudTd DataLabel="@field.PropertyPath">@GetDisplayValue(context, field)</MudTd>
-            }
-        @if(ShowDeleteButton)
+        @foreach (CollectionField field in Fields)
         {
-            @if(ChangingItems.Contains(context))
-                {
+            <MudTd DataLabel="@field.PropertyPath">@GetDisplayValue(context, field)</MudTd>
+        }
+        @if (ShowDeleteButton)
+        {
+            @if (ChangingItems.Contains(context))
+            {
                 <MudProgressCircular Color="Color.Default" Indeterminate="true" />
 
             }
-            else{
-            
-                <MudTd><MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(async () => await DeleteItem(context))"/></MudTd>
+            else
+            {
+
+                <MudTd><MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(async () => await DeleteItem(context))" /></MudTd>
             }
         }
 
-          @if(ShowEditButton)
+        @if (ShowEditButton)
         {
-            @if(ChangingItems.Contains(context))
-                {
+            @if (ChangingItems.Contains(context))
+            {
                 <MudProgressCircular Color="Color.Default" Indeterminate="true" />
 
             }
-            else{
-            
-                <MudTd><MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(async () => await EditItem(context))"/></MudTd>
+            else
+            {
+
+                <MudTd><MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(async () => await EditItem(context))" /></MudTd>
             }
         }
     </RowTemplate>
     <NoRecordsContent>
-        <MudText>No data find</MudText>
+        <MudText>No data found</MudText>
     </NoRecordsContent>
     <LoadingContent>
         <MudText>Loading...</MudText>
