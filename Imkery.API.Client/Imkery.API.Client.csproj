@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Imkery.Entities\Imkery.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Clients\" />
+  </ItemGroup>
+
 </Project>
