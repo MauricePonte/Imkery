@@ -9,7 +9,8 @@
          @onsubmit="SubmitItem">
 
     <MudPaper Class="pl-16 ma-2 pr-16 pt-4 pb-4 d-flex justify-end" Elevation="3">
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">Save</MudButton>
+        @Title
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" ButtonType="ButtonType.Submit" Size="Size.Small">Save</MudButton>
     </MudPaper>
 
     <MudPaper Class="pa-16 ma-2" Elevation="3">
@@ -23,24 +24,7 @@
                     <MudText Color="@Color.Error">@error</MudText>
                 }
             }
-            @foreach (var field in ObjectFields)
-            {
-                field.Item = EditingItem;
-                if (field.DeviatingView != null)
-                {
-                    @field.DeviatingView(EditingItem)
-                    ;
-                }
-                else if (field is ObjectField<TItem, string> stringField)
-                {
-                    <MudTextField T="string" Label="@field.Label" @bind-Text="@stringField.Value" />
-                }
-                else if (field is ObjectField<TItem, int> intField)
-                {
-                    <MudNumericField T="int" Label="@field.Label" @bind-Value="@intField.Value" />
-                }
-                <!--Todo add other possible field values-->
-            }
+           @FormContent(EditingItem)
         }
     </MudPaper>
 

@@ -29,7 +29,10 @@ namespace Imkery.Client.Components.ObjectFormComponent
         private NavigationManager NavigationManager { get; set; }
 
         [Parameter]
-        public List<ObjectField<TItem>> ObjectFields { get; set; } = new List<ObjectField<TItem>>();
+        public RenderFragment<TItem> FormContent { get; set; }
+
+        [Parameter]
+        public string Title { get; set; }
 
         protected MudForm form { get; set; }
         public string[] Errors { get; set; }

@@ -4,32 +4,17 @@
 @using Imkery.Entities
 
 <MudPaper>
-    <ObjectForm TItem="Test" ItemId="@ItemId" ReturnUrl="@((item=> "tests"))" @ref="TestObjectForm" />
+    <ObjectForm TItem="Test" ItemId="@ItemId" ReturnUrl="@(item=> "tests")">
+        <FormContent>
+            <MudTextField Label="Name" @bind-Value="@context.Name" Required="true"/>
+            <MudNumericField Label="Age" @bind-Value="@context.Age" Required="true"/>
+        </FormContent>
+    </ObjectForm>
 </MudPaper>
 
 
 @code
 {
-    public ObjectForm<Test> TestObjectForm { get; set; }
-
     [Parameter]
     public Guid ItemId { get; set; }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            TestObjectForm.ObjectFields.Add(new ObjectField<Test, string>(nameof(Test.Name), "Name"));
-            TestObjectForm.ObjectFields.Add(new DeviatingUIField<Test>(GetFragment()));
-        }
-    }
-
-    public RenderFragment<Test> GetFragment() => context => (__builder) =>
-    {
-        <MudNumericField @bind-Value="context.Age" Label="Age"/>
-    };
-    
-
-
-
  }
