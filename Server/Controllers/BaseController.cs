@@ -51,14 +51,18 @@ namespace Imkery.Server.Controllers
         [HttpGet("")]
         public virtual async Task<ActionResult<ICollection<K>>> GetCollectionAsync([FromQuery(Name="filterpaging")]string filterPagingOptionsJson)
         {
-            ICollection<K> collection = await InternalGetCollectionAsync(filterPagingOptionsJson);
+            ICollection<K>? collection = await InternalGetCollectionAsync(filterPagingOptionsJson);
             return Ok(collection);
         }
 
-        protected virtual async Task<ICollection<K>> InternalGetCollectionAsync(string filterPagingOptionsJson)
+        protected virtual async Task<ICollection<K>?> InternalGetCollectionAsync(string filterPagingOptionsJson)
         {
-            FilterPagingOptions filterPagingOptions = FilterPagingOptions.FromString(filterPagingOptionsJson);
-            string sortField = null;
+            FilterPagingOptions? filterPagingOptions = FilterPagingOptions.FromString(filterPagingOptionsJson);
+            if(filterPagingOptions == null)
+            {
+                return null;
+            }
+            string? sortField = null;
             bool desc = false;
             if (!string.IsNullOrWhiteSpace(filterPagingOptions.SortProperty))
             {
@@ -73,7 +77,11 @@ namespace Imkery.Server.Controllers
         [HttpGet("count")]
         public virtual async Task<ActionResult<int>> GetCountAsync([FromQuery(Name = "filterpaging")]string filterPagingOptionsJson)
         {
-            FilterPagingOptions filterPagingOptions = FilterPagingOptions.FromString(filterPagingOptionsJson);
+            FilterPagingOptions? filterPagingOptions = FilterPagingOptions.FromString(filterPagingOptionsJson);
+            if(filterPagingOptions ==null)
+            {
+                return BadRequest();
+            }
             return Ok(await _repository.GetCountAsync(filterPagingOptions.FilterParameters));
         }
         //
@@ -87,7 +95,7 @@ namespace Imkery.Server.Controllers
         [HttpDelete("{id}")]
         public virtual async Task<ActionResult> DeleteItemByIdAsync(Guid id)
         {
-            K entity = await _repository.GetItemByIdAsync(id);
+            K? entity = await _repository.GetItemByIdAsync(id);
             if(entity ==null)
             {
                 return BadRequest();

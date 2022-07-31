@@ -3,7 +3,7 @@
 @typeparam TItem where TItem : IEntity;
 @inherits CollectionGridBase<TItem>;
 
-<MudTable ServerData="@(new Func<TableState, Task<TableData<TItem>>>(GetCurrentCollectionAsync))" Dense="false" Hover="true"  Striped="true" @bind-SelectedItem="CurrentItem" @ref="_table">
+<MudTable ServerData="@(new Func<TableState, Task<TableData<TItem?>?>>(GetCurrentCollectionAsync))" Dense="false" Hover="true"  Striped="true" @bind-SelectedItem="CurrentItem" @ref="_table">
 <ToolBarContent>
         <MudTextField T="string" ValueChanged="@(s=>DoSearch(s))" Placeholder="Zoeken..." Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>

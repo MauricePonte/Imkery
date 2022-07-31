@@ -10,24 +10,28 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Reflection;
+using Imkery.Entities;
 
 namespace Imkery.Data.Storage.Core
 {
     public abstract class EFRepository
     {
+        public EFRepository(ImkeryDbContext dbContext)
+        {
+            DbContext = dbContext;
+        }
         public ImkeryDbContext DbContext
         {
             get; set;
         }
     }
-    public abstract class EFRepository<T> : EFRepository where T : class, new()
+    public abstract class EFRepository<TItem> : EFRepository where TItem : class, IEntity, new()
     {
 
-        public EFRepository(ImkeryDbContext dbContext)
+        public EFRepository(ImkeryDbContext dbContext) : base(dbContext)
         {
-            DbContext = dbContext;
         }
-        public abstract void ConfigureModel(EntityTypeBuilder<T> modelBuilder);
+        public abstract void ConfigureModel(EntityTypeBuilder<TItem> modelBuilder);
 
 
         public static void ChangeDbContext(ImkeryDbContext databaseContext)
@@ -35,8 +39,8 @@ namespace Imkery.Data.Storage.Core
 
         }
 
-        public abstract DbSet<T> DbSet { get; }
-        public virtual async Task<T> AddAsync(T entity)
+        public abstract DbSet<TItem> DbSet { get; }
+        public virtual async Task<TItem> AddAsync(TItem entity)
         {
             BuildChangeGraph(entity);
             //await DbSet.AddAsync(entity);
@@ -45,7 +49,7 @@ namespace Imkery.Data.Storage.Core
             return entity;
         }
 
-        public virtual async Task<bool> DeleteAsync(T entity)
+        public virtual async Task<bool> DeleteAsync(TItem entity)
         {
             BeforeItemDeleted(entity);
             //DbContext.Attach(entity);
@@ -54,13 +58,13 @@ namespace Imkery.Data.Storage.Core
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
             return true;
         }
-        public virtual void BeforeItemDeleted(T entity)
+        public virtual void BeforeItemDeleted(TItem entity)
         {
 
         }
-        public abstract IQueryable<T> ApplyFiltering(IQueryable<T> query, Dictionary<string, string> filterValues);
+        public abstract IQueryable<TItem> ApplyFiltering(IQueryable<TItem> query, Dictionary<string, string> filterValues);
 
-        public virtual async Task<ICollection<T>> GetCollectionAsync(int from, int count, string sortField, bool desc, Dictionary<string, string> filterValues, string[] includes)
+        public virtual async Task<ICollection<TItem>> GetCollectionAsync(int from, int count, string? sortField, bool desc, Dictionary<string, string> filterValues, string[]? includes)
         {
             var collection = ApplyFiltering(DbSet, filterValues);
             if (includes != null)
@@ -79,12 +83,12 @@ namespace Imkery.Data.Storage.Core
             return await collection.AsNoTracking().ToListAsync().ConfigureAwait(false);
         }
 
-        public virtual async Task<T> GetItemByIdAsync(Guid id)
+        public virtual async Task<TItem?> GetItemByIdAsync(Guid id)
         {
-            return await GetItemById(id, null);
+            return await GetItemById(id);
         }
 
-        public virtual async Task<T> GetItemById(Guid id, string[] includes)
+        public virtual async Task<TItem?> GetItemById(Guid id, string[]? includes = null)
         {
             if (includes == null || includes.Length == 0)
             {
@@ -106,12 +110,12 @@ namespace Imkery.Data.Storage.Core
 
         }
 
-        public virtual void CancelEdit(T entity)
+        public virtual void CancelEdit(TItem entity)
         {
             UntrackItem(entity);
         }
 
-        public virtual void UntrackItem(T entity)
+        public virtual void UntrackItem(TItem entity)
         {
             DbContext.Entry(entity).State = EntityState.Detached;
             var entries = DbContext.ChangeTracker.Entries().ToList();
@@ -121,7 +125,7 @@ namespace Imkery.Data.Storage.Core
             }
         }
 
-        public virtual async Task<T> UpdateAsync(Guid id, T entity)
+        public virtual async Task<TItem?> UpdateAsync(Guid id, TItem entity)
         {
             UntrackItem(entity);
             BuildChangeGraph(entity);
@@ -129,32 +133,52 @@ namespace Imkery.Data.Storage.Core
             foreach (var collection in DbContext.Entry(entity).Collections.ToList())
             {
                 var loadedEntity = await DbSet.FindAsync(id);
-                DbContext.Entry(loadedEntity).Reference(collection.Metadata.Name).Load();
-                DbContext.Entry(loadedEntity).State = EntityState.Detached;
+                if (loadedEntity == null)
+                {
+                    continue;
+                }
+                var entry = DbContext?.Entry(loadedEntity);
+                if (entry != null)
+                {
+                    entry.Reference(collection.Metadata.Name).Load();
+                    entry.State = EntityState.Detached;
+                }
 
-                var dbCollection = (loadedEntity.GetType().GetProperty(collection.Metadata.Name).GetValue(loadedEntity) as IEnumerable<object>).ToList();
-                var currenentValues = collection.CurrentValue.Cast<object>();
+                var dbCollection = (loadedEntity?.GetType()?.GetProperty(collection.Metadata.Name)?.GetValue(loadedEntity) as IEnumerable<object>)?.ToList();
+                if(dbCollection == null)
+                {
+                    continue;
+                }
+                var currenentValues = collection.CurrentValue?.Cast<object>();
                 foreach (var itemInDb in dbCollection)
                 {
-                    if (currenentValues.Where(b => GetKey(b) == GetKey(itemInDb)).Count() == 0)
+                    if (currenentValues?.Where(b => GetKey(b) == GetKey(itemInDb)).Count() == 0)
                     {
-                        DbContext.Remove(itemInDb);
+                        DbContext?.Remove(itemInDb);
                     }
                 }
             }
             await DbContext.SaveChangesAsync();
             UntrackItem(entity);
-            return await DbSet.FindAsync(id).ConfigureAwait(false);
+            var item = await DbSet.FindAsync(id).ConfigureAwait(false);
+            return item;
         }
 
-        public virtual Guid GetKey<T>(T entity)
+        public virtual Guid GetKey<TEntity>(TEntity entity)
         {
-            var keyName = DbContext.Model.FindEntityType(typeof(T)).FindPrimaryKey().Properties
+            var keyName = DbContext?.Model?.FindEntityType(typeof(TItem))?.FindPrimaryKey()?.Properties
                 .Select(x => x.Name).Single();
-            return (Guid)entity.GetType().GetProperty(keyName).GetValue(entity, null);
+            if (keyName !=null && entity?.GetType()?.GetProperty(keyName)?.GetValue(entity, null) is Guid guidValue)
+            {
+                return guidValue;
+            }
+            else
+            {
+                return Guid.Empty;
+            }
         }
 
-        private void BuildChangeGraph(T entity)
+        private void BuildChangeGraph(TItem entity)
         {
             DbContext.ChangeTracker.TrackGraph(entity, node =>
             {
@@ -173,7 +197,7 @@ namespace Imkery.Data.Storage.Core
             });
         }
 
-        public async Task<T> AddSlowAsync(T entity)
+        public async Task<TItem> AddSlowAsync(TItem entity)
         {
             await Task.Delay(2500);
             return await AddAsync(entity).ConfigureAwait(false);
