@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Imkery.API.Client.Core
 {
-    public class BaseClient
+    public abstract class BaseClient
     {
         HttpClient _httpClient;
         protected IApiConfiguration _settings;
