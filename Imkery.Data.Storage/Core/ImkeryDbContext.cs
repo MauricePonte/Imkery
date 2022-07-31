@@ -17,6 +17,5 @@ namespace Imkery.Data.Storage.Core
         {
         }
 
-        public DbSet<Test> Tests { get; set; }
     }
 }

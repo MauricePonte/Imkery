@@ -12,7 +12,6 @@ namespace Imkery.Data.Storage
     {
         public static void AddImkeryRepositories(this IServiceCollection serviceCollection)
         {
-            AddRepository<TestRepository, Test>(serviceCollection);
         }
 
         private static void AddRepository<TRepository, TEntity>(IServiceCollection serviceCollection) where TRepository : EFRepository<TEntity>

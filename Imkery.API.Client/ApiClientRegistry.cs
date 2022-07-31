@@ -10,9 +10,8 @@ namespace Imkery.API.Client
 {
     public class ApiClientRegistry
     {
-        public ApiClientRegistry(TestsClient testsClient)
+        public ApiClientRegistry()
         {
-            _registry.Add(typeof(Test), testsClient);
         }
         private Dictionary<Type, BaseClient> _registry { get; set; } = new Dictionary<Type, BaseClient>();
 
