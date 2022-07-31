@@ -12,6 +12,8 @@ namespace Imkery.API.Client
         public static void AddImkeryAPIClients(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ApiClientRegistry>();
+            serviceCollection.AddScoped<TestsClient>();
+                
         }
     }
 }
