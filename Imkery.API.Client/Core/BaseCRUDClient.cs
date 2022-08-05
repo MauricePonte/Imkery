@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Imkery.API.Client.Core
 {
-    public class BaseCRUDClient<T> : BaseClient
+    public abstract class BaseCRUDClient<T> : BaseClient
     {
         private string _area;
         public BaseCRUDClient(string apiArea, HttpClient httpClient, IApiConfiguration settings) : base(httpClient, settings)

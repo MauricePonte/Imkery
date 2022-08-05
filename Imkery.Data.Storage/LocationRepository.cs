@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Imkery.Data.Storage
 {
-    internal class LocationRepository : EFRepository<Location>
+    public class LocationRepository : EFRepository<Location>
     {
         public LocationRepository(ImkeryDbContext dbContext) : base(dbContext)
         {

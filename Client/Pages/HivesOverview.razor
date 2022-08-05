@@ -1,0 +1,58 @@
+﻿@page "/overview"
+
+<MudText Typo="Typo.h3">Hive overview</MudText>
+
+<MudButton OnClick="(async () => await AddHive())">Add Hive</MudButton>
+
+@if (Hives.Any())
+{
+    <a>refgsgrsgr</a>
+    @*<HiveCard/>*@
+}
+
+@*@if (Hives.Any())
+{
+    @foreach (var hive in Hives)
+    {
+        <HiveCard Hive="hive"/>
+    }
+}*@
+
+
+@code {
+    [Parameter]
+    public Location Location { get; set; }
+
+    public ICollection<Hive> Hives { get; set; } = new List<Hive>();
+
+    [Inject]
+    public HiveClient HivesClient { get; set; }
+
+    protected async Task AddHive()
+    {
+        var item = new Hive();
+        item.Identifier = "1";
+        var newITem = await HivesClient.AddAsync(item);
+        if(newITem != null)
+        {
+            Hives.Add(newITem);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InitializeCollection();
+    }
+
+    public async Task InitializeCollection()
+    {
+        var filterOptions = new FilterPagingOptions()
+            {
+                Includes = new string[] { "Location" },
+                ItemsPerPage = int.MaxValue
+            };
+
+        Hives = await HivesClient.GetCollectionAsync(filterOptions);
+    }
+
+}

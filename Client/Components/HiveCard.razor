@@ -1,0 +1,35 @@
+﻿@using Imkery.Entities
+
+<MudCard Outlined="true">
+    <MudCardMedia Image="images/door.jpg" Height="200" />
+    <MudCardHeader>
+        <MudText Typo="Typo.h4">Hive #@Hive.Identifier</MudText>
+        <MudSpacer />
+        <MudIcon Icon="@Icons.Filled.Lightbulb" Title="Queen is marked" Color="@ColorConverter(Hive.Queen.IsMarked)"/>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudStack>
+            @foreach (var item in Hive.Tags)
+            {
+                <MudPaper Class="pa-3">
+                    <MudText Typo="Typo.body1">12/06/2022</MudText>
+                    <MudText Typo="Typo.body2">Algemene inspectie</MudText>
+                </MudPaper>
+            }
+        </MudStack>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary">Save</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter]
+    public Hive Hive { get; set; }
+
+    public MudBlazor.Color ColorConverter(bool param)
+    {
+        return param ? MudBlazor.Color.Success : MudBlazor.Color.Error;
+    }
+
+}

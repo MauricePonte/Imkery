@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Imkery.API.Client.Core;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,17 @@ namespace Imkery.API.Client
     {
         public static void AddImkeryAPIClients(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<LocationClient>();
-            serviceCollection.AddScoped<ApiClientRegistry>();
+            serviceCollection.AddScoped((services)=>
+            {
+                return new ApiClientRegistry(services);
+            });
+            var clientType = typeof(BaseClient);
+            foreach (var type in typeof(ClientStartupExtensions).Assembly.GetTypes()
+                .Where(t => !t.IsAbstract && clientType.IsAssignableFrom(t)))
+            {
+                serviceCollection.AddScoped(type);
+
+            }
         }
     }
 }

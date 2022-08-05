@@ -1,13 +1,91 @@
 ﻿@page "/"
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
 
 <PageTitle>Imkery</PageTitle>
 
 <MudAlert Severity="Severity.Warning">
     This site is under heavy development, visit
-    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" 
-    Href="https://github.com/MauricePonte/Imkery" Target="_blank"/>
+    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small"
+                   Href="https://github.com/MauricePonte/Imkery" Target="_blank" />
     for updates.
 </MudAlert>
 
 <MudText Typo="Typo.h4">Welcome to imkery</MudText>
-<MudText Typo="Typo.body1"></MudText>
+
+<MudText Typo="Typo.body1">Start by adding a location and some hives!</MudText>
+
+<MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="@(e => ToggleAddLocationOverlay("visible"))">Add location</MudButton>
+
+<MudChipSet>
+    @*@if (Locations.Any())
+    {
+    foreach (var location in Locations)
+    {
+    <MudChip Text="purple" Color="Color.Primary">@location.Name</MudChip>
+    }
+    }
+    else
+    {
+    <MudChip Text="test" OnClick="@(e => ToggleAddLocationOverlay("visible"))" Color="Color.Primary">Add a location!</MudChip>
+    }*@
+</MudChipSet>
+
+
+
+@if (SelectedLocation != null)
+{
+    <HivesOverview Location="@SelectedLocation" />
+}
+
+<MudPaper Class="@_addLocationOverlayIsVisible">
+    <MudText Typo="Typo.h3">New Location</MudText>
+    <MudForm @bind-IsValid="@success">
+        <MudTextField T="string" @bind-Value="LocationToAdd.Name" Label="Location Name" Required="true" RequiredError="A name is required!" />
+        <MudTextField T="string" @bind-Value="LocationToAdd.Street" Label="Street" Required="true" RequiredError="Street is required!" />
+        <MudTextField T="string" @bind-Value="LocationToAdd.City" Label="City" Required="true" RequiredError="City is required!" />
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="((e) => AddLocation())" Class="ml-auto">Register</MudButton>
+
+    </MudForm>
+</MudPaper>
+
+
+
+@code {
+    [Inject]
+    public LocationClient LocationClient { get; set; }
+    public ICollection<Location> Locations { get; set; } = new List<Location>();
+    public Location? SelectedLocation { get; set; } = null;
+    private string _addLocationOverlayIsVisible = "invisible";
+
+    public Location LocationToAdd = new Location();
+
+
+    bool success;
+    public async Task AddLocation()
+    {
+        await LocationClient.AddAsync(LocationToAdd);
+        ToggleAddLocationOverlay("invisible");
+    }
+
+    public void ToggleAddLocationOverlay(string value)
+    {
+        _addLocationOverlayIsVisible = value;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InitializeCollection();
+    }
+
+    public async Task InitializeCollection()
+    {
+        var filterOptions = new FilterPagingOptions()
+            {
+                ItemsPerPage = int.MaxValue
+            };
+
+        Locations = await LocationClient.GetCollectionAsync(filterOptions);
+    }
+}
