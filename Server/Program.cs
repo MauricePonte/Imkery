@@ -1,3 +1,5 @@
+using FluentValidation;
+using Imkery.Data.Storage;
 using Imkery.Data.Storage.Core;
 using Imkery.Entities;
 using Imkery.Server.Data;
@@ -62,9 +64,11 @@ using (var scope = app.Services.CreateScope())
 {
     var databaseContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
     databaseContext?.Database.EnsureCreated();
+    databaseContext?.Database.Migrate();
 
     var databaseContextImkery = scope.ServiceProvider.GetService<ImkeryDbContext>();
     databaseContextImkery?.Database.EnsureCreated();
+    databaseContextImkery?.Database.Migrate();
 }
 
 app.MapRazorPages();
