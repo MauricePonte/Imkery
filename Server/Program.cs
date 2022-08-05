@@ -64,11 +64,11 @@ using (var scope = app.Services.CreateScope())
 {
     var databaseContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
     databaseContext?.Database.EnsureCreated();
-    databaseContext?.Database.Migrate();
+    //databaseContext?.Database.Migrate();
 
     var databaseContextImkery = scope.ServiceProvider.GetService<ImkeryDbContext>();
     databaseContextImkery?.Database.EnsureCreated();
-    databaseContextImkery?.Database.Migrate();
+    //databaseContextImkery?.Database.Migrate();
 }
 
 app.MapRazorPages();

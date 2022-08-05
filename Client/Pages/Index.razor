@@ -15,77 +15,9 @@
 
 <MudText Typo="Typo.body1">Start by adding a location and some hives!</MudText>
 
-<MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="@(e => ToggleAddLocationOverlay("visible"))">Add location</MudButton>
-
-<MudChipSet>
-    @*@if (Locations.Any())
-    {
-    foreach (var location in Locations)
-    {
-    <MudChip Text="purple" Color="Color.Primary">@location.Name</MudChip>
-    }
-    }
-    else
-    {
-    <MudChip Text="test" OnClick="@(e => ToggleAddLocationOverlay("visible"))" Color="Color.Primary">Add a location!</MudChip>
-    }*@
-</MudChipSet>
-
-
-
-@if (SelectedLocation != null)
-{
-    <HivesOverview Location="@SelectedLocation" />
-}
-
-<MudPaper Class="@_addLocationOverlayIsVisible">
-    <MudText Typo="Typo.h3">New Location</MudText>
-    <MudForm @bind-IsValid="@success">
-        <MudTextField T="string" @bind-Value="LocationToAdd.Name" Label="Location Name" Required="true" RequiredError="A name is required!" />
-        <MudTextField T="string" @bind-Value="LocationToAdd.Street" Label="Street" Required="true" RequiredError="Street is required!" />
-        <MudTextField T="string" @bind-Value="LocationToAdd.City" Label="City" Required="true" RequiredError="City is required!" />
-
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="((e) => AddLocation())" Class="ml-auto">Register</MudButton>
-
-    </MudForm>
-</MudPaper>
-
-
+<MudButton Variant="Variant.Filled" Color="Color.Success" Href="location">Add location</MudButton>
 
 @code {
-    [Inject]
-    public LocationClient LocationClient { get; set; }
-    public ICollection<Location> Locations { get; set; } = new List<Location>();
-    public Location? SelectedLocation { get; set; } = null;
-    private string _addLocationOverlayIsVisible = "invisible";
+    
 
-    public Location LocationToAdd = new Location();
-
-
-    bool success;
-    public async Task AddLocation()
-    {
-        await LocationClient.AddAsync(LocationToAdd);
-        ToggleAddLocationOverlay("invisible");
-    }
-
-    public void ToggleAddLocationOverlay(string value)
-    {
-        _addLocationOverlayIsVisible = value;
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await InitializeCollection();
-    }
-
-    public async Task InitializeCollection()
-    {
-        var filterOptions = new FilterPagingOptions()
-            {
-                ItemsPerPage = int.MaxValue
-            };
-
-        Locations = await LocationClient.GetCollectionAsync(filterOptions);
-    }
 }

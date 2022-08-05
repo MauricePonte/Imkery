@@ -1,0 +1,19 @@
+﻿@page "/location"
+@using Imkery.Entities
+
+<MudPaper>
+    <ObjectForm TItem="Location" ItemId="@ItemId" ReturnUrl="@(item=> "")">
+        <FormContent>
+            <MudTextField Label="Name" @bind-Value="@context.Name" Required="true"/>
+            <MudTextField Label="Street" @bind-Value="@context.Street" Required="true"/>
+            <MudTextField Label="City" @bind-Value="@context.City" Required="true"/>
+        </FormContent>
+    </ObjectForm>
+</MudPaper>
+
+
+@code
+{
+    [Parameter]
+    public Guid ItemId { get; set; }
+ } 

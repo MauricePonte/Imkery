@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentValidation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -7,14 +8,11 @@ using System.Threading.Tasks;
 
 namespace Imkery.Entities
 {
-    public class Hive : IEntity
+    public class Hive : IEntity<Hive>
     {
         public Guid Id { get; set; }
 
         public string Identifier { get; set; } = string.Empty;
-
-        public Guid QueenId { get; set; }
-        public Queen? Queen { get; set; }
 
         public Guid LocationId { get; set; }
         public Location? Location { get; set; }
@@ -25,6 +23,11 @@ namespace Imkery.Entities
         public string GetDescription()
         {
             return Identifier;
+        }
+
+        public AbstractValidator<Hive> GetValidator()
+        {
+            return null; 
         }
     }
 }
