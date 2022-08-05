@@ -1,5 +1,20 @@
-﻿@page "/dash"
+﻿@page "/tagdefinitions"
+@using Imkery.Entities
+
+<MudPaper>
+    <CollectionGrid TItem="TagDefinition" @ref="CollectionGrid" ShowDeleteButton="true" ShowEditButton="true" EditPage="tagdefinition" />
+</MudPaper>
 
 @code {
 
-}
+    public CollectionGrid<TagDefinition> CollectionGrid { get; set; }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CollectionGrid.Fields.Add(new CollectionField() { Caption = "Name", PropertyPath = "Name", CanSort=true });
+        }
+    }
+} 
