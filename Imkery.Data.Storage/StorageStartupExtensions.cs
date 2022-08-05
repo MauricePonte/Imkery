@@ -16,15 +16,30 @@ namespace Imkery.Data.Storage
             foreach (var type in typeof(StorageStartupExtensions).Assembly.GetTypes()
                 .Where(t => !t.IsAbstract && repositoryType.IsAssignableFrom(t)))
             {
-                serviceCollection.AddScoped(type);
+                AddRepository(serviceCollection, type);
             }
         }
 
-        private static void AddRepository<TRepository, TEntity>(IServiceCollection serviceCollection) where TRepository : EFRepository<TEntity>
-                                                                                                      where TEntity : class, IEntity<TEntity>, new()
+        private static Type? FindEntityType(Type type)
         {
-            serviceCollection.AddScoped<TRepository>();
-            serviceCollection.AddScoped<IValidator<TEntity>>((serviceProvider) => serviceProvider.GetService<TRepository>().GetValidator());
+            var entityType = type.GenericTypeArguments.FirstOrDefault(b => typeof(IEntity).IsAssignableFrom(b));
+            if (entityType == null)
+            {
+                if (type.BaseType == typeof(EFRepository) || type.BaseType == null)
+                {
+                    return null;
+                }
+                return FindEntityType(type.BaseType);
+            }
+            return entityType;
+        }
+        private static void AddRepository(IServiceCollection serviceCollection, Type repositoryType)
+        {
+            serviceCollection.AddScoped(repositoryType);
+            var entityType = FindEntityType(repositoryType);
+            Type validatorType = typeof(IValidator<>);
+            validatorType = validatorType.MakeGenericType(entityType);
+            serviceCollection.AddScoped(validatorType, (serviceProvider) => (serviceProvider.GetService(repositoryType) as EFRepository).GetValidatorAbstract());
         }
     }
 }

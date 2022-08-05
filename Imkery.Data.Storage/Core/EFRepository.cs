@@ -21,6 +21,8 @@ namespace Imkery.Data.Storage.Core
         {
             get; set;
         }
+
+        internal abstract IValidator GetValidatorAbstract();
     }
     public abstract class EFRepository<T> : EFRepository where T : class, IEntity<T>, new()
     {
@@ -190,6 +192,8 @@ namespace Imkery.Data.Storage.Core
         {
             return new T().GetValidator();
         }
+
+        internal override IValidator GetValidatorAbstract() => GetValidator();
 
 
     }
