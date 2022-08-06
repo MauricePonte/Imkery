@@ -23,6 +23,7 @@ namespace Imkery.Data.Storage.Core
     }
     public abstract class EFRepository<T> : EFRepository where T : class, IEntity, new()
     {
+        public bool SeperatePerUser { get; set; }
         public EFRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider)
         {
             DbContext = dbContext;
@@ -69,7 +70,20 @@ namespace Imkery.Data.Storage.Core
 
         public virtual async Task<ICollection<T>> GetCollectionAsync(int from, int count, string sortField, bool desc, Dictionary<string, string> filterValues, string[] includes)
         {
-            var collection = ApplyFiltering(DbSet, filterValues);
+            IQueryable<T> collection = DbSet;
+            if (SeperatePerUser)
+            {
+                var currentUser = await UserProvider.GetCurrentUserAsync();
+                if (currentUser != null)
+                {
+                    collection = collection.Where(b => b.OwnerId == currentUser.GuidId);
+                }
+                else
+                {
+                    collection = collection.Where(b => false);
+                }
+            }
+            collection = ApplyFiltering(collection, filterValues);
             if (includes != null)
             {
                 foreach (string include in includes)
@@ -93,13 +107,26 @@ namespace Imkery.Data.Storage.Core
 
         public virtual async Task<T> GetItemById(Guid id, string[] includes)
         {
+            IQueryable<T> collection = DbSet;
+            if (SeperatePerUser)
+            {
+                var currentUser = await UserProvider.GetCurrentUserAsync();
+                if (currentUser != null)
+                {
+                    collection = collection.Where(b => b.OwnerId == currentUser.GuidId);
+                }
+                else
+                {
+                    collection = collection.Where(b => false);
+                }
+            }
             if (includes == null || includes.Length == 0)
             {
-                return await DbSet.FindAsync(id);
+                return await collection.FirstOrDefaultAsync(b => b.Id == id);
             }
             else
             {
-                var item = await DbSet.FindAsync(id);
+                var item = await collection.FirstOrDefaultAsync(b => b.Id == id);
                 if (item == null)
                 {
                     return null;

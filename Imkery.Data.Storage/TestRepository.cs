@@ -14,6 +14,7 @@ namespace Imkery.Data.Storage
     {
         public TestRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider) : base(dbContext, userProvider)
         {
+            SeperatePerUser = true;
         }
 
         public override DbSet<Test> DbSet => DbContext.Tests;

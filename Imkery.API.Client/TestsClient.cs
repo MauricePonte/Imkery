@@ -12,7 +12,7 @@ namespace Imkery.API.Client
     {
         public TestsClient(IHttpClientFactory httpClient, IApiConfiguration settings) : base("tests", (options) =>
         {
-            options.AuthorizationOptions.ForGetCollection = false;
+            options.AuthorizationOptions.ForGetCollection = true;
         }, httpClient, settings)
         {
         }
