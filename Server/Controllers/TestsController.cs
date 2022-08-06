@@ -20,11 +20,17 @@ namespace Imkery.Server.Controllers
         {
             return base.GetCollectionAsync(filterPagingOptionsJson);
         }
-
+        
         [AllowAnonymous]
         public override Task<ActionResult<int>> GetCountAsync([FromQuery(Name = "filterpaging")] string filterPagingOptionsJson)
         {
             return base.GetCountAsync(filterPagingOptionsJson);
+        }
+
+        [OnlyOwnerOrAdmin(typeof(TestRepository), "id", false)]
+        public override Task<ActionResult> DeleteItemByIdAsync(Guid id)
+        {
+            return base.DeleteItemByIdAsync(id);
         }
     }
 }

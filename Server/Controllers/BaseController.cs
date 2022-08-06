@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace Imkery.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BaseController<T, K> : ControllerBase
+    public abstract class BaseController<T, K> : ControllerBase
         where T : EFRepository<K>
         where K : class, IEntity, new()
     {

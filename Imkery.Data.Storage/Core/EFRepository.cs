@@ -20,6 +20,19 @@ namespace Imkery.Data.Storage.Core
         {
             get; set;
         }
+
+        public virtual Task<bool> CheckIfMemberMayChangeObject(Guid guid, IImkeryUser user)
+        {
+            return Task.FromResult(false);
+        }
+
+
+        public virtual Task<bool> CheckIfMemberMayDeleteObject(Guid guid, IImkeryUser user)
+        {
+            return Task.FromResult(false);
+        }
+
+
     }
     public abstract class EFRepository<T> : EFRepository where T : class, IEntity, new()
     {
@@ -213,6 +226,25 @@ namespace Imkery.Data.Storage.Core
             return await ApplyFiltering(DbSet, filterValues).CountAsync().ConfigureAwait(false);
         }
 
+        public override async Task<bool> CheckIfMemberMayDeleteObject(Guid guid, IImkeryUser user)
+        {
+            var item = await DbSet.FindAsync(guid).ConfigureAwait(false);
+            if (item == null)
+            {
+                return false;
+            }
+            return item.OwnerId == user.GuidId;
+        }
+
+        public override async Task<bool> CheckIfMemberMayChangeObject(Guid guid, IImkeryUser user)
+        {
+            var item = await DbSet.FindAsync(guid).ConfigureAwait(false);
+            if (item == null)
+            {
+                return false;
+            }
+            return item.OwnerId == user.GuidId;
+        }
 
     }
 
