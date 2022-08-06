@@ -10,14 +10,14 @@ namespace Imkery.API.Client.Core
     public abstract class BaseCRUDClient<T> : BaseClient
     {
         private string _area;
-        public BaseCRUDClient(string apiArea, HttpClient httpClient, IApiConfiguration settings) : base(httpClient, settings)
+        public BaseCRUDClient(string apiArea, IHttpClientFactory httpClientFactory, IApiConfiguration settings) : base(httpClientFactory, settings)
         {
             _area = apiArea;
         }
 
-        public async Task<T> GetItemAsync(Guid id)
+        public async virtual Task<T> GetItemAsync(Guid id, bool withAuthorization = true)
         {
-            var response = await (await GetHttpClient().ConfigureAwait(false)).GetAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/", id.ToString())).ConfigureAwait(false);
+            var response = await GetHttpClient(withAuthorization).GetAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/", id.ToString())).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
@@ -31,9 +31,9 @@ namespace Imkery.API.Client.Core
             return await GetItemsAsync(filterPagingOptions);
         }
 
-        public async Task<ICollection<T>> GetItemsAsync(FilterPagingOptions filterPagingOptions, bool withAutherization = true)
+        public async virtual Task<ICollection<T>> GetItemsAsync(FilterPagingOptions filterPagingOptions, bool withAuthorization = true)
         {
-            var response = await (await GetHttpClient().ConfigureAwait(false)).GetAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "?filterpaging=", filterPagingOptions.ToQueryString())).ConfigureAwait(false);
+            var response = await GetHttpClient(withAuthorization).GetAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "?filterpaging=", filterPagingOptions.ToQueryString())).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<ICollection<T>>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
@@ -42,9 +42,9 @@ namespace Imkery.API.Client.Core
             return null;
         }
 
-        public async Task<int> GetCountAsync(FilterPagingOptions filterPagingOptions)
+        public async virtual Task<int> GetCountAsync(FilterPagingOptions filterPagingOptions, bool withAuthorization = true)
         {
-            var response = await (await GetHttpClient().ConfigureAwait(false)).GetAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/count", "?filterpaging=", filterPagingOptions.ToQueryString())).ConfigureAwait(false);
+            var response = await GetHttpClient().GetAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/count", "?filterpaging=", filterPagingOptions.ToQueryString())).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<int>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
@@ -53,18 +53,18 @@ namespace Imkery.API.Client.Core
             return 0;
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async virtual Task DeleteAsync(Guid id, bool withAuthorization = true)
         {
-            var response = await (await GetHttpClient().ConfigureAwait(false)).DeleteAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/", id.ToString())).ConfigureAwait(false);
+            var response = await GetHttpClient(withAuthorization).DeleteAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/", id.ToString())).ConfigureAwait(false);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 ThrowResponseException(response);
             }
         }
 
-        public async Task<T> AddAsync(T item)
+        public async virtual Task<T> AddAsync(T item, bool withAuthorization = true)
         {
-            var response = await (await GetHttpClient().ConfigureAwait(false)).PostAsync(string.Concat(_settings.GetAPIEndPoint(), _area), new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            var response = await GetHttpClient(withAuthorization).PostAsync(string.Concat(_settings.GetAPIEndPoint(), _area), new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json")).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
@@ -72,9 +72,9 @@ namespace Imkery.API.Client.Core
             ThrowResponseException(response);
             return default;
         }
-        public async Task<T> EditAsync(Guid id, T item)
+        public async virtual Task<T> EditAsync(Guid id, T item, bool withAuthorization = true)
         {
-            var response = await (await GetHttpClient().ConfigureAwait(false)).PutAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/", id.ToString()), new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            var response = await GetHttpClient(withAuthorization).PutAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/", id.ToString()), new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json")).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));

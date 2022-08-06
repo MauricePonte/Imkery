@@ -4,10 +4,39 @@
 
 <MudAlert Severity="Severity.Warning">
     This site is under heavy development, visit
-    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" 
-    Href="https://github.com/MauricePonte/Imkery" Target="_blank"/>
+    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small"
+                   Href="https://github.com/MauricePonte/Imkery" Target="_blank" />
     for updates.
 </MudAlert>
 
 <MudText Typo="Typo.h4">Welcome to imkery</MudText>
 <MudText Typo="Typo.body1"></MudText>
+
+@Test
+@code {
+    [Inject]
+    public IHttpClientFactory HttpClientFactory { get; set; }
+    public string Test { get; set; }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                Test = await HttpClientFactory.CreateClient("Imkery.ServerAPI").GetStringAsync("api/values");
+            }
+            catch
+            {
+                Test = "not authorized";
+            }
+            StateHasChanged();
+
+        }
+    }
+
+
+
+
+}

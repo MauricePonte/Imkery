@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Reflection;
+using Imkery.Entities;
 
 namespace Imkery.Data.Storage.Core
 {
@@ -20,12 +21,12 @@ namespace Imkery.Data.Storage.Core
             get; set;
         }
     }
-    public abstract class EFRepository<T> : EFRepository where T : class, new()
+    public abstract class EFRepository<T> : EFRepository where T : class, IEntity, new()
     {
-
-        public EFRepository(ImkeryDbContext dbContext)
+        public EFRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider)
         {
             DbContext = dbContext;
+            UserProvider = userProvider;
         }
         public abstract void ConfigureModel(EntityTypeBuilder<T> modelBuilder);
 
@@ -36,10 +37,16 @@ namespace Imkery.Data.Storage.Core
         }
 
         public abstract DbSet<T> DbSet { get; }
+        public IImkeryUserProvider UserProvider { get; }
+
         public virtual async Task<T> AddAsync(T entity)
         {
+            var user = await UserProvider.GetCurrentUserAsync();
+            if (user != null)
+            {
+                entity.OwnerId = user.GuidId;
+            }
             BuildChangeGraph(entity);
-            //await DbSet.AddAsync(entity);
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
             UntrackItem(entity);
             return entity;
@@ -136,6 +143,7 @@ namespace Imkery.Data.Storage.Core
                 var currenentValues = collection.CurrentValue.Cast<object>();
                 foreach (var itemInDb in dbCollection)
                 {
+
                     if (currenentValues.Where(b => GetKey(b) == GetKey(itemInDb)).Count() == 0)
                     {
                         DbContext.Remove(itemInDb);
@@ -171,12 +179,6 @@ namespace Imkery.Data.Storage.Core
                 }
 
             });
-        }
-
-        public async Task<T> AddSlowAsync(T entity)
-        {
-            await Task.Delay(2500);
-            return await AddAsync(entity).ConfigureAwait(false);
         }
 
         public async Task<int> GetCountAsync(Dictionary<string, string> filterValues)

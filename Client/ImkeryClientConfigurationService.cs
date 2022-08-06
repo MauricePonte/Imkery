@@ -14,4 +14,10 @@ internal class ImkeryClientConfigurationService : IApiConfiguration
         return _configuration["APIEndPoint"];
 
     }
+
+    public string GetAuthenticatedHttpClientName()
+    {
+        return _configuration["AuthenticatedHttpClient"];
+
+    }
 }
