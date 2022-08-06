@@ -4,5 +4,6 @@
     {
         string GetAPIEndPoint();
         string GetAuthenticatedHttpClientName();
+        string GetDefaultHttpClientName();
     }
 }

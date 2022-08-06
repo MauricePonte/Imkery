@@ -1,0 +1,35 @@
+﻿@page "/tests"
+@using Imkery.API.Client
+@using Imkery.Entities
+
+
+<MudButton OnClick="@(async () => await AddTestItem())">AddTestItem</MudButton>
+<MudPaper>
+    <CollectionGrid TItem="Test" @ref="CollectionGrid" ShowDeleteButton="true" ShowEditButton="true" />
+</MudPaper>
+
+@code {
+
+    [Inject]
+    public TestsClient TestsClient { get; set; }
+
+    public CollectionGrid<Test> CollectionGrid { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CollectionGrid.Fields.Add(new CollectionField() { Caption = "Id", PropertyPath = "Id" });
+            CollectionGrid.Fields.Add(new CollectionField() { Caption = "Naam", PropertyPath = "Name" });
+        }
+    }
+
+    public async Task AddTestItem()
+    {
+        await TestsClient.AddAsync(new Test() { Name = "testertje", Age = 10 });
+    }
+}

@@ -18,6 +18,10 @@ internal class ImkeryClientConfigurationService : IApiConfiguration
     public string GetAuthenticatedHttpClientName()
     {
         return _configuration["AuthenticatedHttpClient"];
-
     }
+    public string GetDefaultHttpClientName()
+    {
+        return _configuration["DefaultHttpClient"];
+    }
+    
 }
