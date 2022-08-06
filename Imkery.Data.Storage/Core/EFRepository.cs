@@ -1,4 +1,3 @@
-﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Reflection;
+using FluentValidation;
 using Imkery.Entities;
 
 namespace Imkery.Data.Storage.Core
@@ -31,10 +31,11 @@ namespace Imkery.Data.Storage.Core
         {
             return Task.FromResult(false);
         }
-
+        
+        internal abstract IValidator GetValidatorAbstract();
 
     }
-    public abstract class EFRepository<T> : EFRepository where T : class, IEntity, new()
+    public abstract class EFRepository<T> : EFRepository where T : class, IEntity<T>, new()
     {
         public bool SeperatePerUser { get; set; }
         public EFRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider)
@@ -236,6 +237,7 @@ namespace Imkery.Data.Storage.Core
             return item.OwnerId == user.GuidId;
         }
 
+
         public override async Task<bool> CheckIfMemberMayChangeObject(Guid guid, IImkeryUser user)
         {
             var item = await DbSet.FindAsync(guid).ConfigureAwait(false);
@@ -246,6 +248,12 @@ namespace Imkery.Data.Storage.Core
             return item.OwnerId == user.GuidId;
         }
 
+        public virtual AbstractValidator<T> GetValidator()
+        {
+            return new T().GetValidator();
+        }
+
+        internal override IValidator GetValidatorAbstract() => GetValidator();
     }
 
     public static class EFExtensions

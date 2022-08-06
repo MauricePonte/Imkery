@@ -6,7 +6,7 @@ using MudBlazor;
 
 namespace Imkery.Client.Components
 {
-    public class CollectionGridBase<TItem> : ComponentBase where TItem : IEntity
+    public class CollectionGridBase<TItem> : ComponentBase where TItem : class, IEntity<TItem>, new()
     {
         [Inject]
         public ApiClientRegistry ApiClientRegistry { get; set; }
@@ -22,6 +22,10 @@ namespace Imkery.Client.Components
         public bool ShowDeleteButton { get; set; }
         [Parameter]
         public bool ShowEditButton { get; set; }
+        [Parameter]
+        public bool ShowAddButton { get; set; }
+        [Parameter]
+        public string EditPage { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -98,10 +102,16 @@ namespace Imkery.Client.Components
         }
         public async Task<bool> EditItem(TItem item)
         {
-            //NavigateToEdit
+            NavigationManager.NavigateTo(EditPage + "/" + item.Id.ToString());
             return true;
         }
-            
+        public async Task<bool> AddItem()
+        {
+            NavigationManager.NavigateTo(EditPage);
+            return true;
+        }
+        
+
 
     }
 }

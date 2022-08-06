@@ -11,7 +11,7 @@ namespace Imkery.Server.Controllers
 {
     public abstract class BaseController<T, K> : ControllerBase
         where T : EFRepository<K>
-        where K : class, IEntity, new()
+        where K : class, IEntity<K>, new()
     {
         protected EFRepository<K> _repository;
         public BaseController(EFRepository<K> repository)
