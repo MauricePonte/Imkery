@@ -1,0 +1,17 @@
+﻿@page "/hive"
+@using Imkery.Entities
+
+<MudPaper>
+    <ObjectForm TItem="Hive" ItemId="@ItemId" ReturnUrl="@(item=> "")">
+        <FormContent>
+            <MudTextField Label="Identifier" @bind-Value="@context.Identifier" Required="true"/>
+        </FormContent>
+    </ObjectForm>
+</MudPaper>
+
+
+@code
+{
+    [Parameter]
+    public Guid ItemId { get; set; }
+ } 

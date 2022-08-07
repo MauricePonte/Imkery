@@ -5,57 +5,38 @@
 
 <MudText Typo="Typo.h3">Hive overview</MudText>
 
-<MudButton OnClick="(async () => await AddHive())">Add Hive</MudButton>
-
+<MudButton Variant="Variant.Filled" Color="Color.Success" Href="hive">Add Hive</MudButton>
 @if (Hives.Any())
 {
-    <a>refgsgrsgr</a>
-    @*<HiveCard/>*@
-}
-
-@*@if (Hives.Any())
-{
+    <a>het werkt!?</a>
     @foreach (var hive in Hives)
     {
-        <HiveCard Hive="hive"/>
+        <HiveCard Hive="hive" />
     }
-}*@
+}
 
 
 @code {
-    [Parameter]
-    public Location Location { get; set; }
-
-    public ICollection<Hive> Hives { get; set; } = new List<Hive>();
-
     [Inject]
-    public HiveClient HivesClient { get; set; }
+    public HiveClient HiveClient { get; set; }
 
-    protected async Task AddHive()
-    {
-        var item = new Hive();
-        item.Identifier = "1";
-        var newITem = await HivesClient.AddAsync(item);
-        if(newITem != null)
-        {
-            Hives.Add(newITem);
-        }
-    }
+    [Parameter]
+    public MudChip[] LocationNames { get; set; }
+    public ICollection<Hive> Hives { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await InitializeCollection();
+        base.OnInitialized();
+
+        var filter = new FilterPagingOptions();
+
+        //List<string> strings = new List<string>();
+        //foreach(var mudChip in LocationNames)
+        //{
+        //    strings.Add(mudChip.Text);
+        //}
+
+        //filter.Includes = strings.ToArray();
+        Hives = await HiveClient.GetCollectionAsync(filter);
     }
-
-    public async Task InitializeCollection()
-    {
-        var filterOptions = new FilterPagingOptions()
-            {
-                Includes = new string[] { "Location" },
-                ItemsPerPage = int.MaxValue
-            };
-
-        Hives = await HivesClient.GetCollectionAsync(filterOptions);
-    }
-
 }

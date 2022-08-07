@@ -100,18 +100,17 @@ namespace Imkery.Client.Components
             }
             return false;
         }
+
         public async Task<bool> EditItem(TItem item)
         {
             NavigationManager.NavigateTo(EditPage + "/" + item.Id.ToString());
             return true;
         }
+
         public async Task<bool> AddItem()
         {
             NavigationManager.NavigateTo(EditPage);
             return true;
         }
-        
-
-
     }
 }

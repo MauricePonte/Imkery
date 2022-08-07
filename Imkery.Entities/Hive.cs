@@ -1,10 +1,5 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Imkery.Entities
 {
@@ -14,8 +9,8 @@ namespace Imkery.Entities
 
         public string Identifier { get; set; } = string.Empty;
 
-        public Guid LocationId { get; set; }
-        public Location? Location { get; set; }
+        //public Guid LocationId { get; set; }
+        //public Location? Location { get; set; }
 
         [NotMapped]
         public ICollection<string> Tags { get; set; } = new List<string>();
@@ -27,7 +22,11 @@ namespace Imkery.Entities
 
         public AbstractValidator<Hive> GetValidator()
         {
-            return null; 
+            var validator = new InlineValidator<Hive>
+            {
+                builder => builder.RuleFor(b => b.Identifier).NotEmpty()
+            };
+            return validator;
         }
     }
 }

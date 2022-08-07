@@ -1,6 +1,9 @@
 ﻿@page "/"
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
+@using Imkery.API.Client
+@using Imkery.API.Client.Core
+@using Imkery.Entities
 
 <PageTitle>Imkery</PageTitle>
 
@@ -11,13 +14,63 @@
     for updates.
 </MudAlert>
 
+<br />
+
 <MudText Typo="Typo.h4">Welcome to imkery</MudText>
 
-<MudText Typo="Typo.body1">Start by adding a location and some hives!</MudText>
+<MudGrid Class="pa-4 mr-16" Justify="Justify.Center">
+    @if (!Locations.Any())
+    {
+        <MudText Typo="Typo.body1">Start by adding a location and some hives!</MudText>
+    }
+    <MudSpacer />
+</MudGrid>
 
-<MudButton Variant="Variant.Filled" Color="Color.Success" Href="location">Add location</MudButton>
+
+<MudChipSet @bind-SelectedChips="selectedLocations" MultiSelection="true" Filter="true">
+    @if (Locations.Any())
+    {
+        @foreach (var location in Locations)
+        {
+            <MudChip Text="@location.Name"></MudChip>
+        }
+    }
+    <MudChip Href="location">
+        <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Small"/>
+        Add location
+    </MudChip>
+</MudChipSet>
+
+
+
+@if (selectedLocations != null && selectedLocations.Any())
+{
+    <HivesOverview LocationNames="@selectedLocations" />
+}
+
+
 
 @code {
-    
+    [Inject]
+    LocationClient locationClient { get; set; }
+    ICollection<Location> Locations { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        var filterOptions = new FilterPagingOptions();
+
+        Locations = await locationClient.GetCollectionAsync(filterOptions);
+    }
+
+    MudChip[] selectedLocations;
+    public List<string> MudChipToStringArr()
+    {
+        var resultCollection = new List<string>();
+        foreach (var item in selectedLocations)
+        {
+            resultCollection.Add(item.Text);
+        }
+        return resultCollection;
+    }
 }
+
