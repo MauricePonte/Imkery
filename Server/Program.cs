@@ -2,11 +2,13 @@ using FluentValidation;
 using Imkery.Data.Storage;
 using Imkery.Data.Storage.Core;
 using Imkery.Entities;
-using Imkery.Server.Data;
 using Imkery.Server.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Imkery.Server.Data;
+using Imkery.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +18,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+    options.User.RequireUniqueEmail = true;
+})
+   .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddDbContext<ImkeryDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("ImkerySqlConnection")));
@@ -32,6 +38,7 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IImkeryUserProvider, ImkeryUserProvider>();
 
 
 var app = builder.Build();
@@ -63,10 +70,12 @@ app.UseAuthorization();
 using (var scope = app.Services.CreateScope())
 {
     var databaseContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+    //databaseContext?.Database.EnsureDeleted();
     databaseContext?.Database.EnsureCreated();
     databaseContext?.Database.Migrate();
 
     var databaseContextImkery = scope.ServiceProvider.GetService<ImkeryDbContext>();
+    databaseContextImkery?.Database.EnsureDeleted();
     databaseContextImkery?.Database.EnsureCreated();
     databaseContextImkery?.Database.Migrate();
 }

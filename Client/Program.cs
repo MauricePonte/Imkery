@@ -13,6 +13,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddHttpClient("Imkery.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
+builder.Services.AddHttpClient("Imkery", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+
 builder.Services.AddScoped(typeof(IApiConfiguration), typeof(ImkeryClientConfigurationService));
 
 //Supply HttpClient instances that include access tokens when making requests to the server project
