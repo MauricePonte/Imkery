@@ -20,4 +20,5 @@ namespace Imkery.Data.Storage.Core
         public DbSet<Location> Locations { get; set; }
         public DbSet<Hive> Hives { get; set; }
     }
+
 }

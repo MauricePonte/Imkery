@@ -3,5 +3,7 @@
     public interface IApiConfiguration
     {
         string GetAPIEndPoint();
+        string GetAuthenticatedHttpClientName();
+        string GetDefaultHttpClientName();
     }
 }

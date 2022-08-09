@@ -9,17 +9,21 @@ namespace Imkery.API.Client.Core
 {
     public abstract class BaseClient
     {
-        HttpClient _httpClient;
+        IHttpClientFactory _httpClientFactory;
         protected IApiConfiguration _settings;
-        public BaseClient(HttpClient httpClient, IApiConfiguration settings)
+        public BaseClient(IHttpClientFactory httpClientFactory, IApiConfiguration settings)
         {
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
             _settings = settings;
         }
 
-        public async Task<HttpClient> GetHttpClient()
+        public HttpClient GetHttpClient(bool authenticated = true)
         {
-            return _httpClient;
+            if (authenticated)
+            {
+                return _httpClientFactory.CreateClient(_settings.GetAuthenticatedHttpClientName());
+            }
+            return _httpClientFactory.CreateClient();
 
         }
 

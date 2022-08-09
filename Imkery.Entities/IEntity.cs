@@ -7,13 +7,13 @@ namespace Imkery.Entities
 {
     public interface IEntity<T> : IEntity where T : class, new()
     {
-        public Guid Id { get; set; }
         AbstractValidator<T> GetValidator();
-        string GetDescription();
     }
 
     public interface IEntity
     {
-
+        public Guid Id { get; set; }
+        public Guid OwnerId { get; set; }
+        string GetDescription();
     }
 }

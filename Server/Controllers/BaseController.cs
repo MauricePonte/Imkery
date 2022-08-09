@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace Imkery.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BaseController<T, K> : ControllerBase
+    public abstract class BaseController<T, K> : ControllerBase
         where T : EFRepository<K>
         where K : class, IEntity<K>, new()
     {
@@ -22,7 +20,7 @@ namespace Imkery.Server.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<ActionResult<K>> AddAsync([FromBody]K entity)
+        public virtual async Task<ActionResult<K>> AddAsync([FromBody] K entity)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +32,7 @@ namespace Imkery.Server.Controllers
         }
 
         [HttpDelete]
-        public virtual async Task<ActionResult<bool>> DeleteAsync([FromBody]K entity)
+        public virtual async Task<ActionResult<bool>> DeleteAsync([FromBody] K entity)
         {
             if (!ModelState.IsValid)
             {
@@ -49,7 +47,7 @@ namespace Imkery.Server.Controllers
         }
 
         [HttpGet("")]
-        public virtual async Task<ActionResult<ICollection<K>>> GetCollectionAsync([FromQuery(Name="filterpaging")]string filterPagingOptionsJson)
+        public virtual async Task<ActionResult<ICollection<K>>> GetCollectionAsync([FromQuery(Name = "filterpaging")] string filterPagingOptionsJson)
         {
             ICollection<K> collection = await InternalGetCollectionAsync(filterPagingOptionsJson);
             return Ok(collection);
@@ -71,7 +69,7 @@ namespace Imkery.Server.Controllers
         }
 
         [HttpGet("count")]
-        public virtual async Task<ActionResult<int>> GetCountAsync([FromQuery(Name = "filterpaging")]string filterPagingOptionsJson)
+        public virtual async Task<ActionResult<int>> GetCountAsync([FromQuery(Name = "filterpaging")] string filterPagingOptionsJson)
         {
             FilterPagingOptions filterPagingOptions = FilterPagingOptions.FromString(filterPagingOptionsJson);
             return Ok(await _repository.GetCountAsync(filterPagingOptions.FilterParameters));
@@ -88,7 +86,7 @@ namespace Imkery.Server.Controllers
         public virtual async Task<ActionResult> DeleteItemByIdAsync(Guid id)
         {
             K entity = await _repository.GetItemByIdAsync(id);
-            if(entity ==null)
+            if (entity == null)
             {
                 return BadRequest();
             }
@@ -97,7 +95,7 @@ namespace Imkery.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public virtual async Task<ActionResult<K>> UpdateAsync(Guid id, [FromBody]K entity)
+        public virtual async Task<ActionResult<K>> UpdateAsync(Guid id, [FromBody] K entity)
         {
             if (!ModelState.IsValid)
             {
@@ -105,6 +103,10 @@ namespace Imkery.Server.Controllers
             }
 
             var entityFromDb = await _repository.GetItemByIdAsync(id);
+            if (entityFromDb.OwnerId != entity.OwnerId)
+            {
+                return BadRequest("Can not change owner this way");
+            }
             if (entityFromDb == null)
             {
                 return NotFound();
