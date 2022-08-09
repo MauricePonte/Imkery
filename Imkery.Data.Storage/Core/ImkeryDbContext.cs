@@ -18,4 +18,5 @@ namespace Imkery.Data.Storage.Core
         }
 
         public DbSet<TagDefinition> TagDefinitions { get; set; }
+    }
 }

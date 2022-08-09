@@ -12,7 +12,7 @@ namespace Imkery.Data.Storage
 {
     public class TagDefinitionRepository : EFRepository<TagDefinition>
     {
-        public TagDefinitionRepository(ImkeryDbContext dbContext) : base(dbContext)
+        public TagDefinitionRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider) : base(dbContext, userProvider)
         {
         }
 
