@@ -1,4 +1,3 @@
-﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Reflection;
+using FluentValidation;
+using Imkery.Entities;
 
 namespace Imkery.Data.Storage.Core
 {
@@ -19,13 +20,28 @@ namespace Imkery.Data.Storage.Core
         {
             get; set;
         }
-    }
-    public abstract class EFRepository<T> : EFRepository where T : class, new()
-    {
 
-        public EFRepository(ImkeryDbContext dbContext)
+        public virtual Task<bool> CheckIfMemberMayChangeObject(Guid guid, IImkeryUser user)
+        {
+            return Task.FromResult(false);
+        }
+
+
+        public virtual Task<bool> CheckIfMemberMayDeleteObject(Guid guid, IImkeryUser user)
+        {
+            return Task.FromResult(false);
+        }
+        
+        internal abstract IValidator GetValidatorAbstract();
+
+    }
+    public abstract class EFRepository<T> : EFRepository where T : class, IEntity<T>, new()
+    {
+        public bool SeperatePerUser { get; set; }
+        public EFRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider)
         {
             DbContext = dbContext;
+            UserProvider = userProvider;
         }
         public abstract void ConfigureModel(EntityTypeBuilder<T> modelBuilder);
 
@@ -36,10 +52,16 @@ namespace Imkery.Data.Storage.Core
         }
 
         public abstract DbSet<T> DbSet { get; }
+        public IImkeryUserProvider UserProvider { get; }
+
         public virtual async Task<T> AddAsync(T entity)
         {
+            var user = await UserProvider.GetCurrentUserAsync();
+            if (user != null)
+            {
+                entity.OwnerId = user.GuidId;
+            }
             BuildChangeGraph(entity);
-            //await DbSet.AddAsync(entity);
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
             UntrackItem(entity);
             return entity;
@@ -62,7 +84,20 @@ namespace Imkery.Data.Storage.Core
 
         public virtual async Task<ICollection<T>> GetCollectionAsync(int from, int count, string sortField, bool desc, Dictionary<string, string> filterValues, string[] includes)
         {
-            var collection = ApplyFiltering(DbSet, filterValues);
+            IQueryable<T> collection = DbSet;
+            if (SeperatePerUser)
+            {
+                var currentUser = await UserProvider.GetCurrentUserAsync();
+                if (currentUser != null)
+                {
+                    collection = collection.Where(b => b.OwnerId == currentUser.GuidId);
+                }
+                else
+                {
+                    collection = collection.Where(b => false);
+                }
+            }
+            collection = ApplyFiltering(collection, filterValues);
             if (includes != null)
             {
                 foreach (string include in includes)
@@ -86,13 +121,26 @@ namespace Imkery.Data.Storage.Core
 
         public virtual async Task<T> GetItemById(Guid id, string[] includes)
         {
+            IQueryable<T> collection = DbSet;
+            if (SeperatePerUser)
+            {
+                var currentUser = await UserProvider.GetCurrentUserAsync();
+                if (currentUser != null)
+                {
+                    collection = collection.Where(b => b.OwnerId == currentUser.GuidId);
+                }
+                else
+                {
+                    collection = collection.Where(b => false);
+                }
+            }
             if (includes == null || includes.Length == 0)
             {
-                return await DbSet.FindAsync(id);
+                return await collection.FirstOrDefaultAsync(b => b.Id == id);
             }
             else
             {
-                var item = await DbSet.FindAsync(id);
+                var item = await collection.FirstOrDefaultAsync(b => b.Id == id);
                 if (item == null)
                 {
                     return null;
@@ -136,6 +184,7 @@ namespace Imkery.Data.Storage.Core
                 var currenentValues = collection.CurrentValue.Cast<object>();
                 foreach (var itemInDb in dbCollection)
                 {
+
                     if (currenentValues.Where(b => GetKey(b) == GetKey(itemInDb)).Count() == 0)
                     {
                         DbContext.Remove(itemInDb);
@@ -173,18 +222,38 @@ namespace Imkery.Data.Storage.Core
             });
         }
 
-        public async Task<T> AddSlowAsync(T entity)
-        {
-            await Task.Delay(2500);
-            return await AddAsync(entity).ConfigureAwait(false);
-        }
-
         public async Task<int> GetCountAsync(Dictionary<string, string> filterValues)
         {
             return await ApplyFiltering(DbSet, filterValues).CountAsync().ConfigureAwait(false);
         }
 
+        public override async Task<bool> CheckIfMemberMayDeleteObject(Guid guid, IImkeryUser user)
+        {
+            var item = await DbSet.FindAsync(guid).ConfigureAwait(false);
+            if (item == null)
+            {
+                return false;
+            }
+            return item.OwnerId == user.GuidId;
+        }
 
+
+        public override async Task<bool> CheckIfMemberMayChangeObject(Guid guid, IImkeryUser user)
+        {
+            var item = await DbSet.FindAsync(guid).ConfigureAwait(false);
+            if (item == null)
+            {
+                return false;
+            }
+            return item.OwnerId == user.GuidId;
+        }
+
+        public virtual AbstractValidator<T> GetValidator()
+        {
+            return new T().GetValidator();
+        }
+
+        internal override IValidator GetValidatorAbstract() => GetValidator();
     }
 
     public static class EFExtensions
