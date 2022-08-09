@@ -6,15 +6,16 @@
 <MudText Typo="Typo.h3">Hive overview</MudText>
 
 <MudButton Variant="Variant.Filled" Color="Color.Success" Href="hive">Add Hive</MudButton>
-@if (Hives.Any())
-{
-    <a>het werkt!?</a>
-    @foreach (var hive in Hives)
-    {
-        <HiveCard Hive="hive" />
-    }
-}
 
+<MudGrid Justify="Justify.Center">
+    @if (Hives.Any())
+    {
+        @foreach (var hive in Hives)
+        {
+            <HiveCard Hive="hive" />
+        }
+    }
+</MudGrid>
 
 @code {
     [Inject]
@@ -30,13 +31,20 @@
 
         var filter = new FilterPagingOptions();
 
-        //List<string> strings = new List<string>();
-        //foreach(var mudChip in LocationNames)
-        //{
-        //    strings.Add(mudChip.Text);
-        //}
-
-        //filter.Includes = strings.ToArray();
+        Dictionary<string, string> filterValues = new Dictionary<string, string>();
+        //filterValues.Add("identifier", string.Join(",",MudChipToStringArr(LocationNames)));
+        filterValues.Add("identifier", "a,b");
+        filter.FilterParameters = filterValues;
         Hives = await HiveClient.GetCollectionAsync(filter);
+    }
+
+    public string[] MudChipToStringArr(MudChip[] mudChips)
+    {
+        var resultCollection = new List<string>();
+        foreach (var item in mudChips)
+        {
+            resultCollection.Add(item.Text);
+        }
+        return resultCollection.ToArray();
     }
 }

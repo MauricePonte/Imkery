@@ -15,11 +15,17 @@ namespace Imkery.Data.Storage
 
         public override IQueryable<Hive> ApplyFiltering(IQueryable<Hive> query, Dictionary<string, string> filterValues)
         {
-            if (filterValues.ContainsKey("searchText") && !string.IsNullOrWhiteSpace(filterValues["searchText"]))
+            var predicate = PredicateBuilder.True<Hive>();
+
+            if (filterValues.ContainsKey("identifier") && !string.IsNullOrWhiteSpace(filterValues["identifier"]))
             {
-                query = query.Where(b => EF.Functions.Like(b.Identifier, $"%{filterValues["searchText"]}%"));
+                
+                var keywords = filterValues["identifier"].Split(",");
+                foreach (string keyword in keywords)
+                    predicate = predicate.Or(p => p.Identifier.Contains(keyword));
             }
-            return query;
+
+            return query.Where(predicate);
         }
 
         public override void ConfigureModel(EntityTypeBuilder<Hive> modelBuilder)

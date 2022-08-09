@@ -15,11 +15,16 @@ namespace Imkery.Data.Storage
 
         public override IQueryable<Location> ApplyFiltering(IQueryable<Location> query, Dictionary<string, string> filterValues)
         {
-            if (filterValues.ContainsKey("searchText") && !string.IsNullOrWhiteSpace(filterValues["searchText"]))
+            var predicate = PredicateBuilder.True<Location>();
+
+            if (filterValues.ContainsKey("Name") && !string.IsNullOrWhiteSpace(filterValues["Name"]))
             {
-                query = query.Where(b => EF.Functions.Like(b.Name, $"%{filterValues["searchText"]}%"));
+                var keywords = filterValues["identifier"].Split(",");
+                foreach (string keyword in keywords)
+                    predicate = predicate.Or(p => p.Name.Contains(keyword));
             }
-            return query;
+
+            return query.Where(predicate);
         }
 
         public override void ConfigureModel(EntityTypeBuilder<Location> modelBuilder)
