@@ -10,6 +10,7 @@ namespace Imkery.Entities
     public class Location : IEntity<Location>
     {
         public Guid Id { get; set; }
+        public Guid OwnerId { get; set; }
 
         public string Name { get; set; } = string.Empty;
 

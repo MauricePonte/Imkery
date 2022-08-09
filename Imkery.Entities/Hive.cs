@@ -6,14 +6,9 @@ namespace Imkery.Entities
     public class Hive : IEntity<Hive>
     {
         public Guid Id { get; set; }
+        public Guid OwnerId { get; set; }
 
         public string Identifier { get; set; } = string.Empty;
-
-        //public Guid LocationId { get; set; }
-        //public Location? Location { get; set; }
-
-        [NotMapped]
-        public ICollection<string> Tags { get; set; } = new List<string>();
 
         public string GetDescription()
         {

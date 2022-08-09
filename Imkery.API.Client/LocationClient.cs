@@ -5,8 +5,8 @@ namespace Imkery.API.Client
 {
     public class LocationClient : BaseCRUDClient<Location>
     {
-        public LocationClient(HttpClient httpClient, IApiConfiguration settings)
-            : base("location", httpClient, settings)
+        public LocationClient(IHttpClientFactory httpClient, IApiConfiguration settings)
+            : base("location", (options) => { }, httpClient, settings)
         {
         }
     }

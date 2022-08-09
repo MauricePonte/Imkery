@@ -7,7 +7,7 @@ namespace Imkery.Data.Storage
 {
     public class LocationRepository : EFRepository<Location>
     {
-        public LocationRepository(ImkeryDbContext dbContext) : base(dbContext)
+        public LocationRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider) : base(dbContext, userProvider)
         {
         }
 

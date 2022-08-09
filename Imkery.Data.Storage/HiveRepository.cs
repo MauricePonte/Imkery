@@ -7,7 +7,7 @@ namespace Imkery.Data.Storage
 {
     public class HiveRepository : EFRepository<Hive>
     {
-        public HiveRepository(ImkeryDbContext dbContext) : base(dbContext)
+        public HiveRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider) : base(dbContext, userProvider)
         {
         }
 

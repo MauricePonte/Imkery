@@ -5,8 +5,8 @@ namespace Imkery.API.Client
 {
     public class HiveClient : BaseCRUDClient<Hive>
     {
-        public HiveClient(HttpClient httpClient, IApiConfiguration settings)
-            : base("hives", httpClient, settings)
+        public HiveClient(IHttpClientFactory httpClient, IApiConfiguration settings)
+            : base("hives", (options) => { }, httpClient, settings)
         {
         }
     }
