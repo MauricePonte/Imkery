@@ -32,7 +32,7 @@ namespace Imkery.Server
         {
             var loggedInUser = await GetLoggedInUser(context, _userManager);
             if (loggedInUser == null
-                || ((_onlyAdmin && !loggedInUser.IsAdministrator) || (!loggedInUser.IsAdministrator && !(await MayLoggedInUserDoChange(loggedInUser, context)))))
+                || ((_onlyAdmin && !loggedInUser.IsAdministrator) || (!_onlyAdmin && !loggedInUser.IsAdministrator && !(await MayLoggedInUserDoChange(loggedInUser, context)))))
             {
                 context.Result = new UnauthorizedResult();
                 return;

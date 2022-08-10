@@ -8,7 +8,7 @@ namespace Imkery.Server
         {
             Arguments = new object[] {
                repositoryType,
-               idOrObjectParameter,
+               idOrObjectParameter ?? "",
                onlyAdmin
             };
         }

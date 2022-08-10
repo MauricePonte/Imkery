@@ -7,7 +7,7 @@ namespace Imkery.Entities
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public Guid OwnerId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Guid OwnerId { get; set; }
 
         public string GetDescription() => Name;
 

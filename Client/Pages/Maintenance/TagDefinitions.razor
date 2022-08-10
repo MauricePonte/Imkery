@@ -1,5 +1,18 @@
-﻿@page "/dash"
+﻿@page "/tagdefinitions"
+
+@using Imkery.Entities
+@attribute [Authorize(Roles = "Admin")] 
+
+<CollectionGrid TItem="TagDefinition" @ref="@CollectionGrid" ShowDeleteButton="true" ShowEditButton="true" ShowAddButton="true" EditPage="tagdefinition"/>
 
 @code {
+    public CollectionGrid<TagDefinition> CollectionGrid { get; set; }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CollectionGrid.Fields.Add(new CollectionField() { PropertyPath = "Name", CanSort = true, Caption = "Name" });
+        }
+    }
 }
