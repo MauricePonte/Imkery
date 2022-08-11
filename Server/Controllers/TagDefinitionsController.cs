@@ -9,25 +9,25 @@ namespace Imkery.Server.Controllers
     [ApiController]
     [Route("api/tagdefinitions")]
     [Authorize]
-    public class TagDefinitionController : BaseController<TagDefinitionRepository, TagDefinition>
+    public class TagDefinitionsController : BaseController<TagDefinitionsRepository, TagDefinition>
     {
-        public TagDefinitionController(TagDefinitionRepository repository) : base(repository)
+        public TagDefinitionsController(TagDefinitionsRepository repository) : base(repository)
         {
         }
 
-        [OnlyOwnerOrAdmin(typeof(TagDefinitionRepository), null, true)]
+        [OnlyOwnerOrAdmin(typeof(TagDefinitionsRepository), null, true)]
         public override Task<ActionResult<TagDefinition>> AddAsync([FromBody] TagDefinition entity)
         {
             return base.AddAsync(entity);
         }
 
-        [OnlyOwnerOrAdmin(typeof(TagDefinitionRepository), "id", true)]
+        [OnlyOwnerOrAdmin(typeof(TagDefinitionsRepository), "id", true)]
         public override Task<ActionResult<TagDefinition>> UpdateAsync(Guid id, [FromBody] TagDefinition entity)
         {
             return base.UpdateAsync(id, entity);
         }
 
-        [OnlyOwnerOrAdmin(typeof(TagDefinitionRepository), "id", true)]
+        [OnlyOwnerOrAdmin(typeof(TagDefinitionsRepository), "id", true)]
         public override Task<ActionResult> DeleteItemByIdAsync(Guid id)
         {
             return base.DeleteItemByIdAsync(id);
