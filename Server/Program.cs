@@ -74,15 +74,16 @@ app.UseAuthorization();
 
 using (var scope = app.Services.CreateScope())
 {
+    // Just fix with pull and re-comment when pushing :)
     var databaseContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
     //databaseContext?.Database.EnsureDeleted();
-    databaseContext?.Database.EnsureCreated();
-    databaseContext?.Database.Migrate();
+    //databaseContext?.Database.EnsureCreated();
+    //databaseContext?.Database.Migrate();
 
     var databaseContextImkery = scope.ServiceProvider.GetService<ImkeryDbContext>();
-    databaseContextImkery?.Database.EnsureDeleted();
-    databaseContextImkery?.Database.EnsureCreated();
-    databaseContextImkery?.Database.Migrate();
+    //databaseContextImkery?.Database.EnsureDeleted();
+    //databaseContextImkery?.Database.EnsureCreated();
+    ////databaseContextImkery?.Database.Migrate();
 }
 
 app.MapRazorPages();

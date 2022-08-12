@@ -8,10 +8,6 @@
 <MudForm @ref="form" @bind-IsValid="@Success"
          @onsubmit="SubmitItem">
 
-    <MudPaper Class="pl-16 ma-2 pr-16 pt-4 pb-4 d-flex justify-end" Elevation="3">
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" ButtonType="ButtonType.Submit" Size="Size.Small">Save</MudButton>
-    </MudPaper>
-
     <MudPaper Class="pa-16 ma-2" Elevation="3">
         @if (EditingItem != null)
         {

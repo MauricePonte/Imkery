@@ -1,0 +1,50 @@
+﻿@page "/overview"
+@using Imkery.API.Client
+@using Imkery.API.Client.Core
+@using Imkery.Entities
+
+<MudText Typo="Typo.h3">Hive overview</MudText>
+
+<MudButton Variant="Variant.Filled" Color="Color.Success" Href="hive">Add Hive</MudButton>
+
+<MudGrid Justify="Justify.Center">
+    @if (Hives.Any())
+    {
+        @foreach (var hive in Hives)
+        {
+            <HiveCard Hive="hive" />
+        }
+    }
+</MudGrid>
+
+@code {
+    [Inject]
+    public HivesClient HiveClient { get; set; }
+
+    [Parameter]
+    public MudChip[] LocationNames { get; set; }
+    public ICollection<Hive> Hives { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+
+        var filter = new FilterPagingOptions();
+
+        Dictionary<string, string> filterValues = new Dictionary<string, string>();
+        //filterValues.Add("identifier", string.Join(",",MudChipToStringArr(LocationNames)));
+        filterValues.Add("identifier", "a,b");
+        filter.FilterParameters = filterValues;
+        Hives = await HiveClient.GetCollectionAsync(filter);
+    }
+
+    public string[] MudChipToStringArr(MudChip[] mudChips)
+    {
+        var resultCollection = new List<string>();
+        foreach (var item in mudChips)
+        {
+            resultCollection.Add(item.Text);
+        }
+        return resultCollection.ToArray();
+    }
+}
