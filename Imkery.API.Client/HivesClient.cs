@@ -3,9 +3,9 @@ using Imkery.Entities;
 
 namespace Imkery.API.Client
 {
-    public class HiveClient : BaseCRUDClient<Hive>
+    public class HivesClient : BaseCRUDClient<Hive>
     {
-        public HiveClient(IHttpClientFactory httpClient, IApiConfiguration settings)
+        public HivesClient(IHttpClientFactory httpClient, IApiConfiguration settings)
             : base("hives", (options) => { }, httpClient, settings)
         {
         }

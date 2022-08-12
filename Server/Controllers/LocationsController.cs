@@ -7,10 +7,10 @@ namespace Imkery.Server.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("api/location")]
-    public class LocationController : BaseController<LocationRepository, Location>
+    [Route("api/locations")]
+    public class LocationsController : BaseController<LocationsRepository, Location>
     {
-        public LocationController(LocationRepository repository) : base(repository)
+        public LocationsController(LocationsRepository repository) : base(repository)
         {
         }
     }

@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Imkery.Data.Storage
 {
-    public class HiveRepository : EFRepository<Hive>
+    public class HivesRepository : EFRepository<Hive>
     {
-        public HiveRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider) : base(dbContext, userProvider)
+        public HivesRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider) : base(dbContext, userProvider)
         {
         }
 
