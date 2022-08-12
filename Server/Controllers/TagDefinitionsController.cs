@@ -15,19 +15,19 @@ namespace Imkery.Server.Controllers
         {
         }
 
-        [OnlyOwnerOrAdmin(typeof(TagDefinitionsRepository), null, true)]
+        [OnlyAdmin]
         public override Task<ActionResult<TagDefinition>> AddAsync([FromBody] TagDefinition entity)
         {
             return base.AddAsync(entity);
         }
 
-        [OnlyOwnerOrAdmin(typeof(TagDefinitionsRepository), "id", true)]
+        [OnlyAdmin]
         public override Task<ActionResult<TagDefinition>> UpdateAsync(Guid id, [FromBody] TagDefinition entity)
         {
             return base.UpdateAsync(id, entity);
         }
 
-        [OnlyOwnerOrAdmin(typeof(TagDefinitionsRepository), "id", true)]
+        [OnlyAdmin]
         public override Task<ActionResult> DeleteItemByIdAsync(Guid id)
         {
             return base.DeleteItemByIdAsync(id);
