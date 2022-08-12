@@ -1,0 +1,16 @@
+﻿@page "/tagdefinition"
+@page "/tagdefinition/{ItemId:guid}"
+@using Imkery.Entities
+@attribute [Authorize(Roles = "Admin")] 
+
+<ObjectForm TItem="TagDefinition" ReturnUrl="@((item)=> "tagdefinitions")" ItemId="@ItemId">
+    <FormContent>
+        <MudTextField Label="Name" @bind-Value="@context.Name" Required="true" />
+    </FormContent>
+</ObjectForm>
+
+@code {
+
+    [Parameter]
+    public Guid ItemId { get; set; }
+}
