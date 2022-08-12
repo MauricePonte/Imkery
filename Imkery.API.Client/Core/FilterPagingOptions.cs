@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 
 namespace Imkery.API.Client.Core
@@ -21,7 +22,8 @@ namespace Imkery.API.Client.Core
 
         public static FilterPagingOptions FromString(string json)
         {
-            return JsonConvert.DeserializeObject<FilterPagingOptions>(json);
+            return JsonConvert.DeserializeObject<FilterPagingOptions>(json,
+                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.None });
         }
     }
 }

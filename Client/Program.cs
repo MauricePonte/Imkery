@@ -21,6 +21,8 @@ builder.Services.AddScoped(typeof(IApiConfiguration), typeof(ImkeryClientConfigu
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Imkery.ServerAPI"));
 builder.Services.AddImkeryAPIClients();
 builder.Services.AddMudServices();
+builder.Services.AddOptions();
+builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 builder.Services.AddApiAuthorization();

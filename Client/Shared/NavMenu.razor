@@ -4,10 +4,9 @@
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
 <MudNavMenu>
-    <AuthorizeView>
+    <AuthorizeView >
         <Authorized>
             <MudNavLink Href="/dash" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-
             <MudNavLink Href="authentication/profile">Hello, @context.User.Identity?.Name!</MudNavLink>
             <MudNavLink OnClick="@BeginSignOut">Log out</MudNavLink>
         </Authorized>
@@ -16,6 +15,12 @@
             <MudNavLink Href="authentication/login" Match="NavLinkMatch.All">Sign in</MudNavLink>
             <MudNavLink Href="authentication/register" Match="NavLinkMatch.All">Register</MudNavLink>
         </NotAuthorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <MudNavLink Href="tagdefinitions">Tagdefinitions</MudNavLink>
+        </Authorized>
     </AuthorizeView>
 </MudNavMenu>
 

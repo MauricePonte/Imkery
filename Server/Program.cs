@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Imkery.Server.Data;
 using Imkery.Server;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,15 +32,19 @@ builder.Services.AddDbContext<ImkeryDbContext>(options =>
 builder.Services.AddImkeryRepositories();
 
 builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
+    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
+    {
+        options.IdentityResources["openid"].UserClaims.Add("role");
+        options.ApiResources.Single().UserClaims.Add("role");
+    })
+    .AddProfileService<ProfileService>();
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IImkeryUserProvider, ImkeryUserProvider>();
-
 
 var app = builder.Build();
 
