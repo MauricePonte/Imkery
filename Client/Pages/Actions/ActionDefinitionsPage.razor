@@ -1,0 +1,48 @@
+﻿@page "/actiondefinitions"
+
+@using Imkery.Entities
+@attribute [Authorize]
+
+<MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@AddItem" />
+
+@if (ActionDefinitions != null)
+{
+    @foreach (var actionDefinition in ActionDefinitions)
+    {
+        <MudCard>
+            <MudCardContent>
+                <MudText>@actionDefinition.Name</MudText>
+                <MudText Typo="Typo.body2">@actionDefinition.Description</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Text" Color="Color.Primary">Edit</MudButton>
+                <MudButton Variant="Variant.Text" Color="Color.Primary">Delete</MudButton>
+            </MudCardActions>
+        </MudCard>
+    }
+}
+
+@code {
+
+    [Inject]
+    public ActionDefinitionsClient ActionDefinitionsClient { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    public ICollection<ActionDefinition> ActionDefinitions { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ActionDefinitions = await ActionDefinitionsClient.GetCollectionAsync(new FilterPagingOptions() { Page = 0, ItemsPerPage = int.MaxValue, Includes = new string[] { } });
+            StateHasChanged();
+        }
+    }
+
+    public void AddItem()
+    {
+        NavigationManager.NavigateTo("actiondefinition");
+    }
+}

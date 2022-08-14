@@ -1,0 +1,68 @@
+﻿@page "/actiondefinition"
+@page "/actiondefinition/{ItemId:guid}"
+@using Imkery.Entities
+@attribute [Authorize]
+
+<ObjectForm TItem="ActionDefinition" ReturnUrl="@((item)=> "actiondefinitions")" ItemId="@ItemId" @ref="_objectForm">
+    <FormContent>
+        <MudTextField Label="Name" @bind-Value="@context.Name" Required="true" />
+        <MudTextField Label="Description" @bind-Value="@context.Description" Lines="5" />
+
+
+
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@AddItem" />
+        @if (context.TagLinks != null)
+        {
+            @foreach (var tag in context.TagLinks)
+            {
+                <MudCard>
+                    <MudCardContent>
+                        <MudSelect T="TagDefinition" @bind-Value="@tag.TagDefinition" Label="Name">
+                            @if (TagDefinitions != null)
+                            {
+                                @foreach (TagDefinition tagDefinition in TagDefinitions)
+                                {
+                                    <MudSelectItem Value="@tagDefinition">@tagDefinition.Name</MudSelectItem>
+                                }
+                            }
+                        </MudSelect>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary">Delete</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            }
+        }
+    </FormContent>
+</ObjectForm>
+
+@code {
+
+    [Parameter]
+    public Guid ItemId { get; set; }
+
+    [Inject]
+    public TagDefinitionsClient TagDefinitionsClient { get; set; }
+
+    private ObjectForm<ActionDefinition> _objectForm;
+
+    public ICollection<TagDefinition> TagDefinitions { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            TagDefinitions = await TagDefinitionsClient.GetCollectionAsync(new FilterPagingOptions() { Page = 0, ItemsPerPage = int.MaxValue });
+            StateHasChanged();
+        }
+    }
+
+    public void AddItem()
+    {
+        if (_objectForm.EditingItem.TagLinks == null)
+        {
+            _objectForm.EditingItem.TagLinks = new List<TagLink>();
+        }
+        _objectForm.EditingItem.TagLinks.Add(new TagLink());
+    }
+}
