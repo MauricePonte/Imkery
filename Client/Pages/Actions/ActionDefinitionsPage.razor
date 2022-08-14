@@ -3,20 +3,20 @@
 @using Imkery.Entities
 @attribute [Authorize]
 
-<MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@AddItem" />
+<MudIconButton Class="ma-3" Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@AddItem">Toevoegen</MudIconButton>
 
 @if (ActionDefinitions != null)
 {
     @foreach (var actionDefinition in ActionDefinitions)
     {
-        <MudCard>
+        <MudCard Class="ma-3">
             <MudCardContent>
                 <MudText>@actionDefinition.Name</MudText>
                 <MudText Typo="Typo.body2">@actionDefinition.Description</MudText>
             </MudCardContent>
             <MudCardActions>
-                <MudButton Variant="Variant.Text" Color="Color.Primary">Edit</MudButton>
-                <MudButton Variant="Variant.Text" Color="Color.Primary">Delete</MudButton>
+               <MudIconButton Class="ma-1" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" Href="@("actiondefinition/" + actionDefinition.Id.ToString())">Edit</MudIconButton>
+              <MudIconButton Class="ma-1" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(async () => await DeleteItem(actionDefinition))">Delete</MudIconButton>
             </MudCardActions>
         </MudCard>
     }
@@ -29,7 +29,8 @@
 
     [Inject]
     public NavigationManager NavigationManager { get; set; }
-
+    [Inject]
+    private IDialogService DialogService { get; set; }
     public ICollection<ActionDefinition> ActionDefinitions { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -44,5 +45,20 @@
     public void AddItem()
     {
         NavigationManager.NavigateTo("actiondefinition");
+    }
+
+    public async Task<bool> DeleteItem(ActionDefinition item)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+         "Delete",
+         $"Are you sure you want to delete '{item.GetDescription()}'?",
+         yesText: "Yes", cancelText: "No");
+        if (result.HasValue && result.Value)
+        {
+            await ActionDefinitionsClient.DeleteAsync(item.Id);
+            ActionDefinitions.Remove(item);
+            return true;
+        }
+        return false;
     }
 }

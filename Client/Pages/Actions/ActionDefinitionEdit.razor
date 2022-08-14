@@ -3,32 +3,32 @@
 @using Imkery.Entities
 @attribute [Authorize]
 
-<ObjectForm TItem="ActionDefinition" ReturnUrl="@((item)=> "actiondefinitions")" ItemId="@ItemId" @ref="_objectForm">
+<ObjectForm TItem="ActionDefinition" ReturnUrl="@((item)=> "actiondefinitions")" ItemId="@ItemId" @ref="_objectForm" BeforeSubmitting="BeforeSubmit">
     <FormContent>
         <MudTextField Label="Name" @bind-Value="@context.Name" Required="true" />
         <MudTextField Label="Description" @bind-Value="@context.Description" Lines="5" />
 
 
 
-        <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@AddItem" />
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@AddItem" Class="ma-3" />
         @if (context.TagLinks != null)
         {
             @foreach (var tag in context.TagLinks)
             {
-                <MudCard>
+                <MudCard Class="ma-3">
                     <MudCardContent>
-                        <MudSelect T="TagDefinition" @bind-Value="@tag.TagDefinition" Label="Name">
-                            @if (TagDefinitions != null)
-                            {
+                        @if (TagDefinitions != null)
+                        {
+                            <MudSelect T="TagDefinition" @bind-Value="@tag.TagDefinition" Label="Name">
                                 @foreach (TagDefinition tagDefinition in TagDefinitions)
                                 {
                                     <MudSelectItem Value="@tagDefinition">@tagDefinition.Name</MudSelectItem>
                                 }
-                            }
-                        </MudSelect>
+                            </MudSelect>
+                        }
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Variant="Variant.Text" Color="Color.Primary">Delete</MudButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(() => DeleteItem(context, tag))" />
                     </MudCardActions>
                 </MudCard>
             }
@@ -44,6 +44,9 @@
     [Inject]
     public TagDefinitionsClient TagDefinitionsClient { get; set; }
 
+    [Inject]
+    private IDialogService DialogService { get; set; }
+
     private ObjectForm<ActionDefinition> _objectForm;
 
     public ICollection<TagDefinition> TagDefinitions { get; set; }
@@ -57,12 +60,41 @@
         }
     }
 
+    public void BeforeSubmit(ActionDefinition item)
+    {
+
+        foreach (var tagLink in item.TagLinks)
+        {
+            if (tagLink.TagDefinition != null)
+            {
+                tagLink.TagDefinitionId = tagLink.TagDefinition.Id;
+            }
+            else
+            {
+                tagLink.TagDefinitionId = Guid.Empty;
+            }
+        }
+    }
+
     public void AddItem()
     {
-        if (_objectForm.EditingItem.TagLinks == null)
+        if (_objectForm.EditingItem.TagLinks == null || _objectForm.EditingItem.TagLinks is not List<TagLink>)
         {
-            _objectForm.EditingItem.TagLinks = new List<TagLink>();
+
+            var list = new List<TagLink>();
+            if (_objectForm.EditingItem.TagLinks != null)
+            {
+                list.AddRange(_objectForm.EditingItem.TagLinks);
+            }
+            _objectForm.EditingItem.TagLinks = list;
         }
-        _objectForm.EditingItem.TagLinks.Add(new TagLink());
+
+        (_objectForm.EditingItem.TagLinks as List<TagLink>).Insert(0, new TagLink());
+
+    }
+
+    public void DeleteItem(ActionDefinition actionDefinition, TagLink tag)
+    {
+        actionDefinition.TagLinks?.Remove(tag);
     }
 }

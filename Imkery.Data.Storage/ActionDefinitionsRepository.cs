@@ -30,9 +30,12 @@ namespace Imkery.Data.Storage
 
         public override void ConfigureModel(EntityTypeBuilder<ActionDefinition> modelBuilder)
         {
-
         }
 
+        public override async Task<ActionDefinition> GetItemByIdAsync(Guid id)
+        {
+            return await GetItemById(id, new string[] { "TagLinks.TagDefinition"});
+        }
         public override async Task<ActionDefinition> AddAsync(ActionDefinition entity)
         {
             var currentUser = await UserProvider.GetCurrentUserAsync();
@@ -54,6 +57,7 @@ namespace Imkery.Data.Storage
                 foreach (TagLink link in entity.TagLinks)
                 {
                     link.OwnerId = currentUser.GuidId;
+                    link.TagDefinition = null;
                 }
             }
             return await base.UpdateAsync(id, entity);

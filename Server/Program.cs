@@ -81,7 +81,7 @@ using (var scope = app.Services.CreateScope())
     //databaseContext?.Database.Migrate();
 
     var databaseContextImkery = scope.ServiceProvider.GetService<ImkeryDbContext>();
-    databaseContextImkery?.Database.EnsureDeleted();
+    //databaseContextImkery?.Database.EnsureDeleted();
     databaseContextImkery?.Database.EnsureCreated();
     ////databaseContextImkery?.Database.Migrate();
 }

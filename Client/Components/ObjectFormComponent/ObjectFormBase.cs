@@ -20,6 +20,9 @@ namespace Imkery.Client.Components.ObjectFormComponent
         [Parameter]
         public Func<TItem, string> ReturnUrl { get; set; }
 
+
+        [Parameter]
+        public Action<TItem> BeforeSubmitting { get; set; }
         public BaseCRUDClient<TItem> ApiClient { get; private set; }
 
         [Inject]
@@ -63,6 +66,7 @@ namespace Imkery.Client.Components.ObjectFormComponent
 
         public async Task<bool> SubmitItem()
         {
+            BeforeSubmitting?.Invoke(EditingItem);
             await DoValidate();
             if (!IsSaving && Success && _isValid)
             {
