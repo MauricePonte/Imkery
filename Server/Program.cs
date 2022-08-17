@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Imkery.Server.Data;
 using Imkery.Server;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,15 +32,19 @@ builder.Services.AddDbContext<ImkeryDbContext>(options =>
 builder.Services.AddImkeryRepositories();
 
 builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
+    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
+    {
+        options.IdentityResources["openid"].UserClaims.Add("role");
+        options.ApiResources.Single().UserClaims.Add("role");
+    })
+    .AddProfileService<ProfileService>();
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IImkeryUserProvider, ImkeryUserProvider>();
-
 
 var app = builder.Build();
 
@@ -69,15 +74,16 @@ app.UseAuthorization();
 
 using (var scope = app.Services.CreateScope())
 {
+    // Just fix with pull and re-comment when pushing :)
     var databaseContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
     //databaseContext?.Database.EnsureDeleted();
-    databaseContext?.Database.EnsureCreated();
-    databaseContext?.Database.Migrate();
+    //databaseContext?.Database.EnsureCreated();
+    //databaseContext?.Database.Migrate();
 
     var databaseContextImkery = scope.ServiceProvider.GetService<ImkeryDbContext>();
-    databaseContextImkery?.Database.EnsureDeleted();
-    databaseContextImkery?.Database.EnsureCreated();
-    databaseContextImkery?.Database.Migrate();
+    //databaseContextImkery?.Database.EnsureDeleted();
+    //databaseContextImkery?.Database.EnsureCreated();
+    ////databaseContextImkery?.Database.Migrate();
 }
 
 app.MapRazorPages();

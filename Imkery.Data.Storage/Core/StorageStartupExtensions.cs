@@ -2,11 +2,8 @@ using FluentValidation;
 using Imkery.Data.Storage.Core;
 using Imkery.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Imkery.Data.Storage
+namespace Imkery.Data.Storage.Core
 {
     public static class StorageStartupExtensions
     {

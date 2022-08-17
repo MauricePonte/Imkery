@@ -10,6 +10,7 @@ namespace Imkery.Entities
     {
         string UserName { get; set; }
         string Id { get; }
+        bool IsAdministrator { get; set; }
         Guid GuidId { get => Guid.Parse(Id); }
     }
 }

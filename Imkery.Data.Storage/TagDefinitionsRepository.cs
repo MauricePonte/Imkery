@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Imkery.Data.Storage
 {
-    public class TagDefinitionRepository : EFRepository<TagDefinition>
+    public class TagDefinitionsRepository : EFRepository<TagDefinition>
     {
-        public TagDefinitionRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider) : base(dbContext, userProvider)
+        public TagDefinitionsRepository(ImkeryDbContext dbContext, IImkeryUserProvider userProvider) : base(dbContext, userProvider)
         {
         }
 
