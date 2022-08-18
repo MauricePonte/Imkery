@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -124,69 +124,69 @@
     <value>Imkery</value>
   </data>
   <data name="Global_LoadingPlaceholder" xml:space="preserve">
-    <value>Laden...</value>
+    <value>Loading...</value>
   </data>
   <data name="Global_NoDataFoundPlaceholder" xml:space="preserve">
-    <value>Geen data gevonden</value>
+    <value>No data found</value>
   </data>
   <data name="Global_NotFoundPlaceholder" xml:space="preserve">
-    <value>Niet gevonden</value>
+    <value>Not found</value>
   </data>
   <data name="Global_NothingHerePlaceholder" xml:space="preserve">
-    <value>Sorry, er is hier niks voor je...</value>
+    <value>Sorry, there's nothing at this address...</value>
   </data>
   <data name="Global_SaveAction" xml:space="preserve">
-    <value>Opslaan</value>
+    <value>Save</value>
   </data>
   <data name="Global_SearchPlaceholder" xml:space="preserve">
-    <value>Zoeken...</value>
+    <value>Searching...</value>
   </data>
   <data name="Global_SelectAction" xml:space="preserve">
-    <value>Selecteren</value>
+    <value>Select</value>
   </data>
   <data name="Global_UnauthorizedPlaceholder" xml:space="preserve">
-    <value>Je hebt geen bevoegd om dit in te zien.</value>
+    <value>You are not authorized to access this resource.</value>
   </data>
   <data name="HiveCard_HiveIdentifierFormat" xml:space="preserve">
-    <value>Bijenkast #{0}</value>
+    <value>Hive # {0}</value>
   </data>
   <data name="HiveEntity_Identifier" xml:space="preserve">
-    <value>Code</value>
+    <value>Identifier</value>
   </data>
   <data name="HivesOverview_AddHives" xml:space="preserve">
-    <value>Voeg bijenkast toe</value>
+    <value>Add hive</value>
   </data>
   <data name="HivesOverview_Title" xml:space="preserve">
-    <value>Bijenkasten overzicht</value>
+    <value>Hives overview</value>
   </data>
   <data name="Index_WelcomeMessage" xml:space="preserve">
-    <value>Welkom bij Imkery!</value>
+    <value>Welcome to Imkery!</value>
   </data>
   <data name="LocationEntity_City" xml:space="preserve">
-    <value>Stad</value>
+    <value>City</value>
   </data>
   <data name="LocationEntity_Name" xml:space="preserve">
-    <value>Naam</value>
+    <value>Name</value>
   </data>
   <data name="LocationEntity_Street" xml:space="preserve">
-    <value>Straat</value>
+    <value>Street</value>
   </data>
   <data name="MainLayout_MaintenanceMessage" xml:space="preserve">
-    <value>Deze site is onder zware ontwikkeling, bezoek de github voor updates.</value>
+    <value>This site is under heavy development, visit the github for updates.</value>
   </data>
   <data name="NavMenu_LogOut" xml:space="preserve">
-    <value>Uitloggen</value>
+    <value>Log out</value>
   </data>
   <data name="NavMenu_Register" xml:space="preserve">
-    <value>Registreren</value>
+    <value>Register</value>
   </data>
   <data name="NavMenu_SignIn" xml:space="preserve">
-    <value>Aanmelden</value>
+    <value>Sign in</value>
   </data>
   <data name="NavMenu_UserGreeting" xml:space="preserve">
-    <value>Hallo, {0}!</value>
+    <value>Hello, {0}!</value>
   </data>
   <data name="TagDefinitions_Title" xml:space="preserve">
-    <value>TagDefinities</value>
+    <value>TagDefinitions</value>
   </data>
 </root>

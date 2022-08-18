@@ -3,9 +3,9 @@
 @using Imkery.API.Client.Core
 @using Imkery.Entities
 
-<MudText Typo="Typo.h3">Hive overview</MudText>
+<MudText Typo="Typo.h3">@Resources.HivesOverview_Title</MudText>
 
-<MudButton Variant="Variant.Filled" Color="Color.Success" Href="hive">Add Hive</MudButton>
+<MudButton Variant="Variant.Filled" Color="Color.Success" Href="hive">@Resources.HivesOverview_AddHives</MudButton>
 
 <MudGrid Justify="Justify.Center">
     @if (Hives.Any())

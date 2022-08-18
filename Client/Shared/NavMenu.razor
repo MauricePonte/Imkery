@@ -6,26 +6,25 @@
 <MudNavMenu>
     <AuthorizeView >
         <Authorized>
-            <MudNavLink Href="/dash" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-            <MudNavLink Href="authentication/profile">Hello, @context.User.Identity?.Name!</MudNavLink>
-            <MudNavLink OnClick="@BeginSignOut">Log out</MudNavLink>
+            <MudNavLink Href="/dash" Match="NavLinkMatch.All">@Resources.Dashboard_Title</MudNavLink>
+            <MudNavLink Href="authentication/profile">@string.Format(Resources.NavMenu_UserGreeting, @context.User.Identity?.Name)</MudNavLink>
+            <MudNavLink OnClick="@BeginSignOut">@Resources.NavMenu_LogOut</MudNavLink>
         </Authorized>
         <NotAuthorized>
             <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
-            <MudNavLink Href="authentication/login" Match="NavLinkMatch.All">Sign in</MudNavLink>
-            <MudNavLink Href="authentication/register" Match="NavLinkMatch.All">Register</MudNavLink>
+            <MudNavLink Href="authentication/login" Match="NavLinkMatch.All">@Resources.NavMenu_SignIn</MudNavLink>
+            <MudNavLink Href="authentication/register" Match="NavLinkMatch.All">@Resources.NavMenu_Register</MudNavLink>
         </NotAuthorized>
     </AuthorizeView>
 
     <AuthorizeView Roles="Admin">
         <Authorized>
-            <MudNavLink Href="tagdefinitions">Tagdefinitions</MudNavLink>
+            <MudNavLink Href="tagdefinitions">@Resources.TagDefinitions_Title</MudNavLink>
         </Authorized>
     </AuthorizeView>
 </MudNavMenu>
 
 @code {
-
     private async void BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();

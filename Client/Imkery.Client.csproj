@@ -4,7 +4,16 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <NeutralLanguage>en</NeutralLanguage>
+    <GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="nl\**" />
+    <Content Remove="nl\**" />
+    <EmbeddedResource Remove="nl\**" />
+    <None Remove="nl\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Remove="Pages\Counter.razor" />
@@ -35,6 +44,21 @@
 
   <ItemGroup>
     <Folder Include="Components\ObjectFormComponent\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

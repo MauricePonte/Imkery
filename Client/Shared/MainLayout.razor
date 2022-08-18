@@ -8,7 +8,7 @@
 <MudLayout>
     <MudAppBar>
         <MudIcon Icon="@Icons.Filled.Hive" Color="Color.Warning" Size="Size.Large"/>
-        <MudText Typo="Typo.h3">Imkery</MudText>
+        <MudText Typo="Typo.h3">@Resources.Global_Imkery</MudText>
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
     </MudAppBar>
@@ -18,6 +18,13 @@
 
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Medium">
+
+            <MudAlert Severity="Severity.Warning">
+                @Resources.MainLayout_MaintenanceMessage
+                <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small"
+                               Href="https://github.com/MauricePonte/Imkery" Target="_blank" />
+            </MudAlert>
+
             @Body
         </MudContainer>
     </MudMainContent>

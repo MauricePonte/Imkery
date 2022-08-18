@@ -7,16 +7,7 @@
 
 <PageTitle>Imkery</PageTitle>
 
-<MudAlert Severity="Severity.Warning">
-    This site is under heavy development, visit
-    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small"
-                   Href="https://github.com/MauricePonte/Imkery" Target="_blank" />
-    for updates.
-</MudAlert>
-
-<br />
-
-<MudText Typo="Typo.h4">Welcome to imkery</MudText>
+<MudText Typo="Typo.h4">@Resources.Index_WelcomeMessage</MudText>
 
 <MudGrid Class="pa-4 mr-16" Justify="Justify.Center">
     @if (!Locations.Any())

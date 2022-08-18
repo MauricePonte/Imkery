@@ -1,9 +1,9 @@
 ﻿@using Imkery.Entities
 
 <MudCard Outlined="true">
-    <MudCardMedia Image="images/door.jpg" Height="20" />
+    <MudCardMedia Height="20" />
     <MudCardHeader>
-        <MudText Typo="Typo.h4">Hive #@Hive.Identifier</MudText>
+        <MudText Typo="Typo.h4">@string.Format(Resources.HiveCard_HiveIdentifierFormat,Hive.Identifier)</MudText>
         <MudSpacer />
         @*<MudIcon Icon="@Icons.Filled.Lightbulb" Title="Queen is marked" Color="@ColorConverter(Hive.Queen.IsMarked)"/>*@
     </MudCardHeader>
@@ -19,7 +19,7 @@
         </MudStack>
     </MudCardContent>
     <MudCardActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Tertiary">Save</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary">@Resources.Global_SaveAction</MudButton>
     </MudCardActions>
 </MudCard>
 
@@ -31,5 +31,4 @@
     {
         return param ? MudBlazor.Color.Success : MudBlazor.Color.Error;
     }
-
 }
