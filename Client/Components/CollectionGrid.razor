@@ -5,7 +5,7 @@
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<TItem>>>(GetCurrentCollectionAsync))" Dense="false" Hover="true" Striped="true" @bind-SelectedItem="CurrentItem" @ref="_table">
     <ToolBarContent>
-        <MudTextField T="string" ValueChanged="@(s=>DoSearch(s))" Placeholder="Zoeken..." Adornment="Adornment.Start"
+        <MudTextField T="string" ValueChanged="@(s=>DoSearch(s))" Placeholder="@Resources.Global_SearchPlaceholder" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         @if (ShowAddButton)
         {
@@ -69,10 +69,10 @@
         }
     </RowTemplate>
     <NoRecordsContent>
-        <MudText>No data found</MudText>
+        <MudText>@Resources.Global_NoDataFoundPlaceholder</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>Loading...</MudText>
+        <MudText>@Resources.Global_LoadingPlaceholder</MudText>
     </LoadingContent>
     <PagerContent>
         <MudTablePager />

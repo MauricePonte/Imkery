@@ -9,16 +9,16 @@
                     }
                     else
                     {
-                        <p role="alert">You are not authorized to access this resource.</p>
+                        <p role="alert">@Resources.Resources.Global_UnauthorizedPlaceholder</p>
                     }
                 </NotAuthorized>
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
         <NotFound>
-            <PageTitle>Not found</PageTitle>
+            <PageTitle>@Resources.Resources.Global_NotFoundPlaceholder</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+                <p role="alert">@Resources.Resources.Global_NothingHerePlaceholder</p>
             </LayoutView>
         </NotFound>
     </Router>
