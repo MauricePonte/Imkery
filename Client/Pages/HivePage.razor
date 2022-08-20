@@ -4,7 +4,7 @@
 <MudPaper>
     <ObjectForm TItem="Hive" ItemId="@ItemId" ReturnUrl="@(item=> "")">
         <FormContent>
-            <MudTextField Label="Identifier" @bind-Value="@context.Identifier" Required="true"/>
+            <MudTextField Label="@Resources.HiveEntity_Identifier" @bind-Value="@context.Identifier" Required="true"/>
         </FormContent>
     </ObjectForm>
 </MudPaper>
