@@ -9,7 +9,7 @@
   <ItemGroup>
     <Content Remove="Pages\Counter.razor" />
     <Content Remove="Pages\FetchData.razor" />
-    <Content Remove="wwwroot\typescript\InitializeBingMap.ts" />
+    <Content Remove="wwwroot\tp\InitializeBingMap.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,10 +41,6 @@
 
   <ItemGroup>
     <Folder Include="Components\ObjectFormComponent\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="wwwroot\typescript\InitializeBingMap.ts" />
   </ItemGroup>
 
 </Project>

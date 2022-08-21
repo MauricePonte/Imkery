@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using MudBlazor;
 
 namespace Imkery.Client.Components
 {
