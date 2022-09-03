@@ -117,8 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActionDefinition_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ActionDefinition_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Actions_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Actions_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Actions_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
   <data name="Dashboard_Title" xml:space="preserve">
     <value>Dashboard</value>
+  </data>
+  <data name="Dialog_DeleteQuestion" xml:space="preserve">
+    <value>Are you sure you want to delete '{0}'?</value>
+  </data>
+  <data name="Dialog_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Dialog_Yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
   <data name="Global_Imkery" xml:space="preserve">
     <value>Imkery</value>
@@ -174,6 +198,9 @@
   <data name="MainLayout_MaintenanceMessage" xml:space="preserve">
     <value>This site is under heavy development, visit the github for updates.</value>
   </data>
+  <data name="NavMenu_ActionDefinitions" xml:space="preserve">
+    <value>Action definition</value>
+  </data>
   <data name="NavMenu_LogOut" xml:space="preserve">
     <value>Log out</value>
   </data>
@@ -188,5 +215,8 @@
   </data>
   <data name="TagDefinitions_Title" xml:space="preserve">
     <value>TagDefinitions</value>
+  </data>
+  <data name="TagDefinition_Name" xml:space="preserve">
+    <value>Name</value>
   </data>
 </root>

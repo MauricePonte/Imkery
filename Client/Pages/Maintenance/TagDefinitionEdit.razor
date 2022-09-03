@@ -5,7 +5,7 @@
 
 <ObjectForm TItem="TagDefinition" ReturnUrl="@((item)=> "tagdefinitions")" ItemId="@ItemId">
     <FormContent>
-        <MudTextField Label="Name" @bind-Value="@context.Name" Required="true" />
+        <MudTextField Label="@Resources.TagDefinition_Name" @bind-Value="@context.Name" Required="true" />
     </FormContent>
 </ObjectForm>
 

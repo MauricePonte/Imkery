@@ -8,7 +8,7 @@
         <Authorized>
             <MudNavLink Href="/dash" Match="NavLinkMatch.All">@Resources.Dashboard_Title</MudNavLink>
             <MudNavLink Href="authentication/profile">@string.Format(Resources.NavMenu_UserGreeting, @context.User.Identity?.Name)</MudNavLink> 
-            <MudNavLink Href="actiondefinitions">Actiondefinitions</MudNavLink>
+            <MudNavLink Href="actiondefinitions">@Resources.NavMenu_ActionDefinitions</MudNavLink>
             <MudNavLink OnClick="@BeginSignOut">@Resources.NavMenu_LogOut</MudNavLink>
         </Authorized>
         <NotAuthorized>

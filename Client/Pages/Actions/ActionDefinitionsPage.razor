@@ -3,7 +3,7 @@
 @using Imkery.Entities
 @attribute [Authorize]
 
-<MudIconButton Class="ma-3" Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@AddItem">Toevoegen</MudIconButton>
+<MudIconButton Class="ma-3" Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@AddItem">@Resources.Actions_Add</MudIconButton>
 
 @if (ActionDefinitions != null)
 {
@@ -15,8 +15,8 @@
                 <MudText Typo="Typo.body2">@actionDefinition.Description</MudText>
             </MudCardContent>
             <MudCardActions>
-               <MudIconButton Class="ma-1" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" Href="@("actiondefinition/" + actionDefinition.Id.ToString())">Edit</MudIconButton>
-              <MudIconButton Class="ma-1" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(async () => await DeleteItem(actionDefinition))">Delete</MudIconButton>
+               <MudIconButton Class="ma-1" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" Href="@("actiondefinition/" + actionDefinition.Id.ToString())">@Resources.Actions_Edit</MudIconButton>
+              <MudIconButton Class="ma-1" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(async () => await DeleteItem(actionDefinition))">@Resources.Actions_Delete</MudIconButton>
             </MudCardActions>
         </MudCard>
     }
@@ -50,9 +50,9 @@
     public async Task<bool> DeleteItem(ActionDefinition item)
     {
         bool? result = await DialogService.ShowMessageBox(
-         "Delete",
-         $"Are you sure you want to delete '{item.GetDescription()}'?",
-         yesText: "Yes", cancelText: "No");
+         Resources.Actions_Delete,
+        string.Format(Resources.Dialog_DeleteQuestion,item.GetDescription()),
+         yesText: Resources.Dialog_Yes, cancelText: Resources.Dialog_No);
         if (result.HasValue && result.Value)
         {
             await ActionDefinitionsClient.DeleteAsync(item.Id);

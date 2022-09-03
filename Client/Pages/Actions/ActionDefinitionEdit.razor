@@ -5,8 +5,8 @@
 
 <ObjectForm TItem="ActionDefinition" ReturnUrl="@((item)=> "actiondefinitions")" ItemId="@ItemId" @ref="_objectForm" BeforeSubmitting="BeforeSubmit">
     <FormContent>
-        <MudTextField Label="Name" @bind-Value="@context.Name" Required="true" />
-        <MudTextField Label="Description" @bind-Value="@context.Description" Lines="5" />
+        <MudTextField Label="@Resources.ActionDefinition_Name" @bind-Value="@context.Name" Required="true" />
+        <MudTextField Label="@Resources.ActionDefinition_Description" @bind-Value="@context.Description" Lines="5" />
 
 
 
@@ -19,7 +19,7 @@
                     <MudCardContent>
                         @if (TagDefinitions != null)
                         {
-                            <MudSelect T="TagDefinition" @bind-Value="@tag.TagDefinition" Label="Name">
+                            <MudSelect T="TagDefinition" @bind-Value="@tag.TagDefinition" Label="@Resources.ActionDefinition_Name">
                                 @foreach (TagDefinition tagDefinition in TagDefinitions)
                                 {
                                     <MudSelectItem Value="@tagDefinition">@tagDefinition.Name</MudSelectItem>
