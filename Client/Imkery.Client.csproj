@@ -9,7 +9,7 @@
   <ItemGroup>
     <Content Remove="Pages\Counter.razor" />
     <Content Remove="Pages\FetchData.razor" />
-    <Content Remove="wwwroot\tp\InitializeBingMap.ts" />
+    <Content Remove="wwwroot\ts\InitializeBingMap.ts" />
   </ItemGroup>
 
   <ItemGroup>
