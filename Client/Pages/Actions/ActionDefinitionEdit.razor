@@ -1,0 +1,100 @@
+﻿@page "/actiondefinition"
+@page "/actiondefinition/{ItemId:guid}"
+@using Imkery.Entities
+@attribute [Authorize]
+
+<ObjectForm TItem="ActionDefinition" ReturnUrl="@((item)=> "actiondefinitions")" ItemId="@ItemId" @ref="_objectForm" BeforeSubmitting="BeforeSubmit">
+    <FormContent>
+        <MudTextField Label="@Resources.ActionDefinition_Name" @bind-Value="@context.Name" Required="true" />
+        <MudTextField Label="@Resources.ActionDefinition_Description" @bind-Value="@context.Description" Lines="5" />
+
+
+
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@AddItem" Class="ma-3" />
+        @if (context.TagLinks != null)
+        {
+            @foreach (var tag in context.TagLinks)
+            {
+                <MudCard Class="ma-3">
+                    <MudCardContent>
+                        @if (TagDefinitions != null)
+                        {
+                            <MudSelect T="TagDefinition" @bind-Value="@tag.TagDefinition" Label="@Resources.ActionDefinition_Name">
+                                @foreach (TagDefinition tagDefinition in TagDefinitions)
+                                {
+                                    <MudSelectItem Value="@tagDefinition">@tagDefinition.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                        }
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(() => DeleteItem(context, tag))" />
+                    </MudCardActions>
+                </MudCard>
+            }
+        }
+    </FormContent>
+</ObjectForm>
+
+@code {
+
+    [Parameter]
+    public Guid ItemId { get; set; }
+
+    [Inject]
+    public TagDefinitionsClient TagDefinitionsClient { get; set; }
+
+    [Inject]
+    private IDialogService DialogService { get; set; }
+
+    private ObjectForm<ActionDefinition> _objectForm;
+
+    public ICollection<TagDefinition> TagDefinitions { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            TagDefinitions = await TagDefinitionsClient.GetCollectionAsync(new FilterPagingOptions() { Page = 0, ItemsPerPage = int.MaxValue });
+            StateHasChanged();
+        }
+    }
+
+    public void BeforeSubmit(ActionDefinition item)
+    {
+
+        foreach (var tagLink in item.TagLinks)
+        {
+            if (tagLink.TagDefinition != null)
+            {
+                tagLink.TagDefinitionId = tagLink.TagDefinition.Id;
+            }
+            else
+            {
+                tagLink.TagDefinitionId = Guid.Empty;
+            }
+        }
+    }
+
+    public void AddItem()
+    {
+        if (_objectForm.EditingItem.TagLinks == null || _objectForm.EditingItem.TagLinks is not List<TagLink>)
+        {
+
+            var list = new List<TagLink>();
+            if (_objectForm.EditingItem.TagLinks != null)
+            {
+                list.AddRange(_objectForm.EditingItem.TagLinks);
+            }
+            _objectForm.EditingItem.TagLinks = list;
+        }
+
+        (_objectForm.EditingItem.TagLinks as List<TagLink>).Insert(0, new TagLink());
+
+    }
+
+    public void DeleteItem(ActionDefinition actionDefinition, TagLink tag)
+    {
+        actionDefinition.TagLinks?.Remove(tag);
+    }
+}

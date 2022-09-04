@@ -61,11 +61,83 @@ namespace Imkery.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string ActionDefinition_Description {
+            get {
+                return ResourceManager.GetString("ActionDefinition_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string ActionDefinition_Name {
+            get {
+                return ResourceManager.GetString("ActionDefinition_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        internal static string Actions_Add {
+            get {
+                return ResourceManager.GetString("Actions_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string Actions_Delete {
+            get {
+                return ResourceManager.GetString("Actions_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        internal static string Actions_Edit {
+            get {
+                return ResourceManager.GetString("Actions_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dashboard.
         /// </summary>
         internal static string Dashboard_Title {
             get {
                 return ResourceManager.GetString("Dashboard_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete &apos;{0}&apos;?.
+        /// </summary>
+        internal static string Dialog_DeleteQuestion {
+            get {
+                return ResourceManager.GetString("Dialog_DeleteQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        internal static string Dialog_No {
+            get {
+                return ResourceManager.GetString("Dialog_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        internal static string Dialog_Yes {
+            get {
+                return ResourceManager.GetString("Dialog_Yes", resourceCulture);
             }
         }
         
@@ -232,6 +304,15 @@ namespace Imkery.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Action definition.
+        /// </summary>
+        internal static string NavMenu_ActionDefinitions {
+            get {
+                return ResourceManager.GetString("NavMenu_ActionDefinitions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log out.
         /// </summary>
         internal static string NavMenu_LogOut {
@@ -264,6 +345,15 @@ namespace Imkery.Client.Resources {
         internal static string NavMenu_UserGreeting {
             get {
                 return ResourceManager.GetString("NavMenu_UserGreeting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string TagDefinition_Name {
+            get {
+                return ResourceManager.GetString("TagDefinition_Name", resourceCulture);
             }
         }
         

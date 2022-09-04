@@ -20,5 +20,6 @@ namespace Imkery.Data.Storage.Core
         public DbSet<Location> Locations { get; set; }
         public DbSet<Hive> Hives { get; set; }
         public DbSet<TagDefinition> TagDefinitions { get; set; }
+        public DbSet<ActionDefinition> ActionDefinitions { get; set; }
     }
 }

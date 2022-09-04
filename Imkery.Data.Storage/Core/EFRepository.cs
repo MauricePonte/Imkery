@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using FluentValidation;
 using Imkery.Entities;
+using System.Collections;
 
 namespace Imkery.Data.Storage.Core
 {
@@ -31,7 +32,7 @@ namespace Imkery.Data.Storage.Core
         {
             return Task.FromResult(false);
         }
-        
+
         internal abstract IValidator GetValidatorAbstract();
 
     }
@@ -121,7 +122,7 @@ namespace Imkery.Data.Storage.Core
 
         public virtual async Task<T> GetItemById(Guid id, string[] includes)
         {
-            IQueryable<T> collection = DbSet;
+            IQueryable<T> collection = DbSet.AsNoTracking();
             if (SeperatePerUser)
             {
                 var currentUser = await UserProvider.GetCurrentUserAsync();
@@ -140,15 +141,16 @@ namespace Imkery.Data.Storage.Core
             }
             else
             {
+                foreach (string include in includes)
+                {
+                    collection = collection.Include(include);
+                }
                 var item = await collection.FirstOrDefaultAsync(b => b.Id == id);
                 if (item == null)
                 {
                     return null;
                 }
-                foreach (string include in includes)
-                {
-                    DbContext.Entry(item).Reference(include).Load();
-                }
+
                 return item;
             }
 
@@ -171,14 +173,10 @@ namespace Imkery.Data.Storage.Core
 
         public virtual async Task<T> UpdateAsync(Guid id, T entity)
         {
-            UntrackItem(entity);
             BuildChangeGraph(entity);
-            //DbSet.Update(entity);
             foreach (var collection in DbContext.Entry(entity).Collections.ToList())
             {
-                var loadedEntity = await DbSet.FindAsync(id);
-                DbContext.Entry(loadedEntity).Reference(collection.Metadata.Name).Load();
-                DbContext.Entry(loadedEntity).State = EntityState.Detached;
+                var loadedEntity = await DbSet.Include(collection.Metadata.Name).AsNoTracking().FirstOrDefaultAsync(b => b.Id == entity.Id);
 
                 var dbCollection = (loadedEntity.GetType().GetProperty(collection.Metadata.Name).GetValue(loadedEntity) as IEnumerable<object>).ToList();
                 var currenentValues = collection.CurrentValue.Cast<object>();
@@ -192,13 +190,12 @@ namespace Imkery.Data.Storage.Core
                 }
             }
             await DbContext.SaveChangesAsync();
-            UntrackItem(entity);
             return await DbSet.FindAsync(id).ConfigureAwait(false);
         }
 
         public virtual Guid GetKey<T>(T entity)
         {
-            var keyName = DbContext.Model.FindEntityType(typeof(T)).FindPrimaryKey().Properties
+            var keyName = DbContext.Model.FindEntityType(entity.GetType()).FindPrimaryKey().Properties
                 .Select(x => x.Name).Single();
             return (Guid)entity.GetType().GetProperty(keyName).GetValue(entity, null);
         }
