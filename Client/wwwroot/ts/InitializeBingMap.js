@@ -1,9 +1,9 @@
 /// <reference path="types/MicrosoftMaps/Microsoft.Maps.All.d.ts" />
 var BingMap = /** @class */ (function () {
     function BingMap() {
+        navigator.geolocation.getCurrentPosition(initializeCenterLocation);
         this.map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
-            /* No need to set credentials if already passed in URL */
-            center: new Microsoft.Maps.Location(52.373275556573866, 4.899844627461851),
+            center: centerLocation,
             mapTypeId: Microsoft.Maps.MapTypeId.aerial,
             zoom: 10,
             navigationBarMode: Microsoft.Maps.NavigationBarMode.compact,
@@ -13,6 +13,8 @@ var BingMap = /** @class */ (function () {
     }
     return BingMap;
 }());
+var clickedLocation;
+var centerLocation;
 var bingMap;
 function loadMap() {
     bingMap = new BingMap();
@@ -24,7 +26,18 @@ function addPushPin(e) {
         var locTemp = e.target.tryPixelToLocation(clickedPoint);
         var location = new Microsoft.Maps.Location(locTemp.latitude, locTemp.longitude);
         var pin = new Microsoft.Maps.Pushpin(location, { 'draggable': false });
+        clickedLocation = location;
         bingMap.map.entities.push(pin);
     }
+}
+function initializeCenterLocation(position) {
+    centerLocation = new Microsoft.Maps.Location(position.coords.latitude, position.coords.longitude);
+    if (centerLocation == null) {
+        centerLocation = new Microsoft.Maps.Location(52.373275556573866, 4.899844627461851);
+    }
+}
+function getClickedLocationCoords() {
+    console.log(JSON.stringify(clickedLocation));
+    return JSON.stringify(clickedLocation);
 }
 //# sourceMappingURL=InitializeBingMap.js.map
