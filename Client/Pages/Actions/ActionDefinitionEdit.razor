@@ -26,6 +26,11 @@
                                 }
                             </MudSelect>
                         }
+                        <MudCheckBox Label="@Resources.ActionDefinition_Continues" @bind-Checked="@tag.IsContinues" />
+                        @if (!tag.IsContinues)
+                        {
+                            <MudTextField Label="@Resources.ActionDefinition_Duration" @bind-Value="@tag.Duration" Placeholder="HH:MM" Mask="@timeMask" />
+                        }
                     </MudCardContent>
                     <MudCardActions>
                         <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" @onclick="@(() => DeleteItem(context, tag))" />
@@ -51,6 +56,10 @@
 
     public ICollection<TagDefinition> TagDefinitions { get; set; }
 
+    public PatternMask timeMask = new PatternMask("##:##")
+        {
+            MaskChars = new[] { new MaskChar('#', @"[0-9]") }
+        };
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

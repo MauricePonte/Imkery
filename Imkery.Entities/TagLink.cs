@@ -15,12 +15,16 @@ namespace Imkery.Entities
         public Guid TagDefinitionId { get; set; }
         public TagDefinition TagDefinition { get; set; }
 
+        public bool IsContinues { get; set; } = true;
+        public string? Duration { get; set; }
 
         public string GetDescription() => Id.ToString();
 
         public AbstractValidator<TagLink> GetValidator()
         {
-            return new InlineValidator<TagLink>();
+            var validator = new InlineValidator<TagLink>();
+            validator.RuleFor(b => b.Duration).Matches("[0-9][0-9]:[0-9][0-9]").When(b=> !b.IsContinues);
+            return validator;
         }
     }
 }

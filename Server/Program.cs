@@ -83,7 +83,7 @@ using (var scope = app.Services.CreateScope())
     var databaseContextImkery = scope.ServiceProvider.GetService<ImkeryDbContext>();
     //databaseContextImkery?.Database.EnsureDeleted();
     databaseContextImkery?.Database.EnsureCreated();
-    ////databaseContextImkery?.Database.Migrate();
+    //databaseContextImkery?.Database.Migrate();
 }
 
 app.MapRazorPages();
