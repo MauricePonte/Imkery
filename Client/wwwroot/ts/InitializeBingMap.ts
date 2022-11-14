@@ -1,4 +1,4 @@
-﻿/// <reference path="types/MicrosoftMaps/Microsoft.Maps.All.d.ts" />
+/// <reference path="types/MicrosoftMaps/Microsoft.Maps.All.d.ts" />
 
 class BingMap {
     map: Microsoft.Maps.Map;
@@ -19,6 +19,7 @@ class BingMap {
         Microsoft.Maps.Events.addHandler(this.map, "click", (e) => addPushPin(e));
     }
 }
+
 let clickedLocation;
 let centerLocation;
 let bingMap: BingMap;
@@ -48,6 +49,6 @@ function initializeCenterLocation(position): void{
 }
 
 function getClickedLocationCoords() {
-    console.log(JSON.stringify(clickedLocation))
+    console.log(JSON.stringify(clickedLocation.latitude))
     return JSON.stringify(clickedLocation);
 }

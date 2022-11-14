@@ -1,0 +1,21 @@
+﻿@page "/locationOverview"
+@using Imkery.Entities
+@inject NavigationManager NavigationManager
+
+@foreach(var location in Locations){
+    <a>@location</a>
+}
+
+<MudButton OnClick="() => Test()"> Test</MudButton>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "a")]
+    public string[] Locations { get; set; }
+
+    public void Test(){
+        string[] a = new string[] { "a", "b", "c" };
+        var navLink = NavigationManager.GetUriWithQueryParameter("a", a.ToString());
+        NavigationManager.NavigateTo(navLink);
+    }
+}

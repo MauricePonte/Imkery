@@ -32,7 +32,7 @@
     {
         @foreach (var location in Locations)
         {
-            <MudChip Text="@location.Name"></MudChip>
+            <MudChip Text="@location.Name" ></MudChip>
         }
     }
     <MudChip Href="location">
@@ -54,7 +54,8 @@
 @code {
     [Inject]
     LocationsClient locationClient { get; set; }
-    ICollection<Location> Locations { get; set; }
+
+    public ICollection<Location> Locations { get; set; } = new List<Location>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,6 +73,13 @@
             resultCollection.Add(item.Text);
         }
         return resultCollection;
+    }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+    public void NavigateToLocation()
+    {
+        NavigationManager.NavigateTo("/locationOverview");
     }
 }
 

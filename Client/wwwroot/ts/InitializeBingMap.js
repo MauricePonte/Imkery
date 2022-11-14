@@ -37,7 +37,7 @@ function initializeCenterLocation(position) {
     }
 }
 function getClickedLocationCoords() {
-    console.log(JSON.stringify(clickedLocation));
+    console.log(JSON.stringify(clickedLocation.latitude));
     return JSON.stringify(clickedLocation);
 }
 //# sourceMappingURL=InitializeBingMap.js.map
