@@ -1,5 +1,8 @@
 ﻿using Imkery.API.Client.Core;
 using Imkery.Entities;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Imkery.API.Client
 {
@@ -9,5 +12,19 @@ namespace Imkery.API.Client
             : base("hives", (options) => { }, httpClient, settings)
         {
         }
+
+
+        public async Task<Hive?> ApplyActionToHiveAsync(Hive hive, ActionDefinition action)
+        {
+            var response = await GetHttpClient(true).PostAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/DoAction/", hive.Id.ToString(), "/", action.Id.ToString()), new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<Hive>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+            }
+            ThrowResponseException(response);
+            return null;
+        }
+
+     
     }
 }

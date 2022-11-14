@@ -19,7 +19,7 @@ namespace Imkery.Data.Storage
 
             if (filterValues.ContainsKey("identifier") && !string.IsNullOrWhiteSpace(filterValues["identifier"]))
             {
-                
+
                 var keywords = filterValues["identifier"].Split(",");
                 foreach (string keyword in keywords)
                     predicate = predicate.Or(p => p.Identifier.Contains(keyword));
@@ -30,6 +30,34 @@ namespace Imkery.Data.Storage
 
         public override void ConfigureModel(EntityTypeBuilder<Hive> modelBuilder)
         {
+        }
+        public override Task<Hive> GetItemById(Guid id, string[] includes)
+        {
+            return base.GetItemById(id, new string[] { "Tags.TagDefinition" });
+        }
+
+        public async Task<Hive> ApplyActionToHiveAsync(Hive hive, ActionDefinition action)
+        {
+            foreach (TagLink tagLink in action.TagLinks)
+            {
+                TimeSpan duration = new TimeSpan();
+                if (!tagLink.IsContinues)
+                {
+                    string[] parts = tagLink.Duration.Split(":");
+                    duration = new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]), 0);
+                }
+
+                hive.Tags.Add(new Tag()
+                {
+                    OwnerId = (await UserProvider.GetCurrentUserAsync()).GuidId,
+                    Id = new Guid(),
+                    TagDefinitionId = tagLink.TagDefinition.Id,
+                    AddedOn = DateTime.UtcNow,
+                    AlwaysValid = tagLink.IsContinues,
+                    ValidTill = DateTime.UtcNow.Add(duration)
+                });
+            }
+            return await UpdateAsync(hive.Id, hive);
         }
     }
 }
