@@ -13,5 +13,11 @@ namespace Imkery.Server.Controllers
         public LocationsController(LocationsRepository repository) : base(repository)
         {
         }
+
+        [AllowAnonymous]
+        public override Task<ActionResult<ICollection<Location>>> GetCollectionAsync([FromQuery(Name = "filterpaging")] string filterPagingOptionsJson)
+        {
+            return base.GetCollectionAsync(filterPagingOptionsJson);
+        }
     }
 }
