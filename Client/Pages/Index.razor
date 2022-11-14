@@ -9,35 +9,39 @@
 
 <MudText Typo="Typo.h4">@Resources.Index_WelcomeMessage</MudText>
 
-<MudGrid Class="pa-4 mr-16" Justify="Justify.Center">
-    @if (!Locations.Any())
-    {
-        <MudText Typo="Typo.body1">Start by adding a location and some hives!</MudText>
-    }
-    <MudSpacer />
-</MudGrid>
-
-
-<MudChipSet @bind-SelectedChips="selectedLocations" MultiSelection="true" Filter="true">
-    @if (Locations.Any())
-    {
-        @foreach (var location in Locations)
-        {
-            <MudChip Text="@location.Name"></MudChip>
-        }
-    }
-    <MudChip Href="location">
-        <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Small"/>
-        Add location
-    </MudChip>
-</MudChipSet>
-
-
-<MudDivider DividerType="DividerType.Middle" Class="ma-1"/>
-
-@if (selectedLocations != null && selectedLocations.Any())
+@if (Locations != null)
 {
-    <HivesOverview LocationNames="@selectedLocations" />
+    <MudGrid Class="pa-4 mr-16" Justify="Justify.Center">
+        @if (!Locations.Any())
+        {
+            <MudText Typo="Typo.body1">Start by adding a location and some hives!</MudText>
+        }
+        <MudSpacer />
+    </MudGrid>
+
+
+    <MudChipSet @bind-SelectedChips="selectedLocations" MultiSelection="true" Filter="true">
+        @if (Locations.Any())
+        {
+            @foreach (var location in Locations)
+            {
+                <MudChip Text="@location.Name"></MudChip>
+            }
+
+        }
+        <MudChip Href="location">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+            Add location
+        </MudChip>
+    </MudChipSet>
+
+
+    <MudDivider DividerType="DividerType.Middle" Class="ma-1" />
+
+    @if (selectedLocations != null && selectedLocations.Any())
+    {
+        <HivesOverview LocationNames="@selectedLocations" />
+    }
 }
 
 

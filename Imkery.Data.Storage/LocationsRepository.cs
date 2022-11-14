@@ -27,6 +27,7 @@ namespace Imkery.Data.Storage
             return query.Where(predicate);
         }
 
+
         public override void ConfigureModel(EntityTypeBuilder<Location> modelBuilder)
         {
         }
