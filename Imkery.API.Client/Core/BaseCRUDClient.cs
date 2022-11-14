@@ -9,8 +9,8 @@ namespace Imkery.API.Client.Core
 {
     public abstract class BaseCRUDClient<T> : BaseClient
     {
-        private string _area;
-        private BaseCRUDClientOptions Options { get; set; }
+        protected string _area;
+        protected BaseCRUDClientOptions Options { get; set; }
         public BaseCRUDClient(string apiArea, Action<BaseCRUDClientOptions> options, IHttpClientFactory httpClientFactory, IApiConfiguration settings) : base(httpClientFactory, settings)
         {
             _area = apiArea;

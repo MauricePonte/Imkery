@@ -19,7 +19,11 @@ namespace Imkery.Entities
 
         public AbstractValidator<ActionDefinition> GetValidator()
         {
-            return new InlineValidator<ActionDefinition>();
+            var validator = new InlineValidator<ActionDefinition>();
+            validator.RuleForEach(b => b.TagLinks).SetValidator(new TagLink().GetValidator());
+            validator.RuleFor(b => b.Name).NotEmpty();
+            return validator;
+              
         }
     }
 }

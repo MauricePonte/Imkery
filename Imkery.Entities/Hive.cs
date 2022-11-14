@@ -10,6 +10,8 @@ namespace Imkery.Entities
 
         public string Identifier { get; set; } = string.Empty;
 
+        public virtual ICollection<Tag> Tags { get; set; }
+
         public string GetDescription()
         {
             return Identifier;

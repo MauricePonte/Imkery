@@ -61,11 +61,29 @@ namespace Imkery.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Oneindige tag.
+        /// </summary>
+        internal static string ActionDefinition_Continues {
+            get {
+                return ResourceManager.GetString("ActionDefinition_Continues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
         internal static string ActionDefinition_Description {
             get {
                 return ResourceManager.GetString("ActionDefinition_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geldig voor.
+        /// </summary>
+        internal static string ActionDefinition_Duration {
+            get {
+                return ResourceManager.GetString("ActionDefinition_Duration", resourceCulture);
             }
         }
         
