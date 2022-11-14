@@ -1,6 +1,7 @@
 ﻿using Imkery.Data.Storage;
 using Imkery.Data.Storage.Core;
 using Imkery.Entities;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,38 @@ namespace Imkery.Tests
             Assert.That(savedHive.OwnerId == new Guid(MockUserProvider.DefaultUser.Id), "User not automaticaly set");
         }
 
+
+        [Test]
+        public async Task DeleteHive()
+        {
+            var dbContext = BootstrapTests.ServiceProvider.GetService<ImkeryDbContext>();
+            dbContext.Hives.RemoveRange(dbContext.Hives);
+            dbContext.SaveChanges();
+
+            Hive hive = new Hive();
+            (BootstrapTests.ServiceProvider.GetService<IImkeryUserProvider>() as MockUserProvider).LoggedIn = true;
+            hive.Identifier = "Tester";
+            var repository = BootstrapTests.ServiceProvider.GetService<HivesRepository>();
+            var savedHive = await repository.AddAsync(hive);
+            await repository.DeleteAsync(hive);
+            Assert.That((await repository.GetCollectionAsync(0, int.MaxValue, "", true, new Dictionary<string, string>(), new string[0])).Count == 0, "Not deleted");
+        }
+
+        [Test]
+        public async Task UpdateHive()
+        {
+            Hive hive = new Hive();
+            (BootstrapTests.ServiceProvider.GetService<IImkeryUserProvider>() as MockUserProvider).LoggedIn = true;
+            hive.Identifier = "Tester";
+            var repository = BootstrapTests.ServiceProvider.GetService<HivesRepository>();
+            var savedHive = await repository.AddAsync(hive);
+            savedHive = await repository.GetItemByIdAsync(hive.Id);
+
+            savedHive.Identifier = "Tester2";
+            await repository.UpdateAsync(savedHive.Id, savedHive);
+            savedHive = await repository.GetItemByIdAsync(savedHive.Id);
+            Assert.That(savedHive.Identifier == "Tester2", "Update not working");
+        }
 
 
 
