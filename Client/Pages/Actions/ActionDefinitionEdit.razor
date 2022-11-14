@@ -62,16 +62,18 @@
 
     public void BeforeSubmit(ActionDefinition item)
     {
-
-        foreach (var tagLink in item.TagLinks)
+        if (item.TagLinks != null)
         {
-            if (tagLink.TagDefinition != null)
+            foreach (var tagLink in item.TagLinks)
             {
-                tagLink.TagDefinitionId = tagLink.TagDefinition.Id;
-            }
-            else
-            {
-                tagLink.TagDefinitionId = Guid.Empty;
+                if (tagLink.TagDefinition != null)
+                {
+                    tagLink.TagDefinitionId = tagLink.TagDefinition.Id;
+                }
+                else
+                {
+                    tagLink.TagDefinitionId = Guid.Empty;
+                }
             }
         }
     }
