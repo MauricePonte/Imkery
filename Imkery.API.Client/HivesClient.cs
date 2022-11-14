@@ -16,7 +16,7 @@ namespace Imkery.API.Client
 
         public async Task<Hive?> ApplyActionToHiveAsync(Hive hive, ActionDefinition action)
         {
-            var response = await GetHttpClient(true).PostAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/DoAction/", hive.Id.ToString(), "/", action.Id.ToString()), new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            var response = await GetHttpClient(true).PostAsync(string.Concat(_settings.GetAPIEndPoint(), _area, "/DoAction/", hive.Id.ToString(), "/", action.Id.ToString()), null).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<Hive>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
@@ -25,6 +25,6 @@ namespace Imkery.API.Client
             return null;
         }
 
-     
+
     }
 }
