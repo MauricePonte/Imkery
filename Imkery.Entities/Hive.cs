@@ -10,7 +10,7 @@ namespace Imkery.Entities
 
         public string Identifier { get; set; } = string.Empty;
 
-        public virtual ICollection<Tag> Tags { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
 
         public string GetDescription()
         {

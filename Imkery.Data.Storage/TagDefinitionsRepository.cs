@@ -18,7 +18,7 @@ namespace Imkery.Data.Storage
 
         public override DbSet<TagDefinition> DbSet => DbContext.TagDefinitions;
 
-        public override IQueryable<TagDefinition> ApplyFiltering(IQueryable<TagDefinition> query, Dictionary<string, string> filterValues)
+        public override async Task<IQueryable<TagDefinition>> ApplyFilteringAsync(IQueryable<TagDefinition> query, Dictionary<string, string> filterValues)
         {
             if (filterValues.ContainsKey("searchText") && !string.IsNullOrWhiteSpace(filterValues["searchText"]))
             {

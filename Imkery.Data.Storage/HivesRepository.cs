@@ -13,10 +13,15 @@ namespace Imkery.Data.Storage
 
         public override DbSet<Hive> DbSet => DbContext.Hives;
 
-        public override IQueryable<Hive> ApplyFiltering(IQueryable<Hive> query, Dictionary<string, string> filterValues)
+        public override async Task<IQueryable<Hive>> ApplyFilteringAsync(IQueryable<Hive> query, Dictionary<string, string> filterValues)
         {
             var predicate = PredicateBuilder.True<Hive>();
-
+            if (filterValues.ContainsKey("OnlyCurrentUser")
+                && bool.TryParse(filterValues["OnlyCurrentUser"], out bool onlyUser)
+                && (await UserProvider.GetCurrentUserAsync()) is IImkeryUser user)
+            {
+                predicate = predicate.And(p => p.OwnerId == user.GuidId);
+            }
             if (filterValues.ContainsKey("identifier") && !string.IsNullOrWhiteSpace(filterValues["identifier"]))
             {
 
@@ -40,13 +45,18 @@ namespace Imkery.Data.Storage
         {
             foreach (TagLink tagLink in action.TagLinks)
             {
+                if (hive.Tags.Any(b => b.TagDefinitionId == tagLink.TagDefinitionId && (b.AlwaysValid || b.ValidTill < DateTime.UtcNow)))
+                {
+                    continue;//TODO: if is on the hive, but not valid till new period update to longer period
+                }
+                
                 TimeSpan duration = new TimeSpan();
                 if (!tagLink.IsContinues)
                 {
                     string[] parts = tagLink.Duration.Split(":");
                     duration = new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]), 0);
                 }
-
+                
                 hive.Tags.Add(new Tag()
                 {
                     OwnerId = (await UserProvider.GetCurrentUserAsync()).GuidId,
@@ -57,7 +67,8 @@ namespace Imkery.Data.Storage
                     ValidTill = DateTime.UtcNow.Add(duration)
                 });
             }
-            return await UpdateAsync(hive.Id, hive);
+            await UpdateAsync(hive.Id, hive);
+            return await GetItemByIdAsync(hive.Id);
         }
     }
 }

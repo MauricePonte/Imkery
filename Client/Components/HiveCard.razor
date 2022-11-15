@@ -9,17 +9,29 @@
     </MudCardHeader>
     <MudCardContent>
         <MudStack>
-@*            @foreach (var item in Hive.Tags)
+            @foreach (var item in Hive.Tags)
             {
                 <MudPaper Class="pa-3">
-                    <MudText Typo="Typo.body1">12/06/2022</MudText>
-                    <MudText Typo="Typo.body2">Algemene inspectie</MudText>
+                    <MudText Typo="Typo.body1">@item.TagDefinition.Name</MudText>
+                    <MudText Typo="Typo.body2">@item.AddedOn.ToShortDateString()</MudText>
                 </MudPaper>
-            }*@
+            }
         </MudStack>
     </MudCardContent>
     <MudCardActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Tertiary">@Resources.Global_SaveAction</MudButton>
+        @if (Hive.OwnerId == CurrentUserId)
+        {
+            <MudIconButton Variant="Variant.Filled" Color="Color.Tertiary" Icon="@Icons.Material.Outlined.Edit" Href="@("hive/"+Hive.Id.ToString())" Class="ma-3"></MudIconButton>
+            <MudIconButton Variant="Variant.Filled" Color="Color.Tertiary" Icon="@Icons.Material.Outlined.DeleteForever" Class="ma-3"></MudIconButton>
+
+            <MudMenu Icon="@Icons.Material.Filled.AddCircle" AnchorOrigin="Origin.BottomLeft" Class="ma-3">
+                @foreach (var action in ActionDefinitions)
+                {
+                    <MudMenuItem OnClick="@(async ()=> await DoAction(action))">@action.Name</MudMenuItem>
+                }
+            </MudMenu>
+        }
+
     </MudCardActions>
 </MudCard>
 
@@ -27,8 +39,37 @@
     [Parameter]
     public Hive Hive { get; set; }
 
+    [Inject]
+    public ActionDefinitionsClient ActionDefinitionsClient { get; set; }
+
+    [Inject]
+    public HivesClient HivesClient { get; set; }
+
+    [Inject]
+    public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    public Guid CurrentUserId { get; set; }
+
+    public ICollection<ActionDefinition> ActionDefinitions { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User != null)
+        {
+            CurrentUserId = new Guid(authState.User.Claims.FirstOrDefault(b => b.Type == "sub").Value);
+            ActionDefinitions = await ActionDefinitionsClient.GetCollectionAsync(new FilterPagingOptions() { ItemsPerPage = int.MaxValue });
+        }
+    }
+
     public MudBlazor.Color ColorConverter(bool param)
     {
         return param ? MudBlazor.Color.Success : MudBlazor.Color.Error;
+    }
+
+    public async Task DoAction(ActionDefinition action)
+    {
+        Hive = await HivesClient.ApplyActionToHiveAsync(Hive, action);
     }
 }

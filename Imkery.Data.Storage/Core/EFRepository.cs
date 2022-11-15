@@ -81,7 +81,7 @@ namespace Imkery.Data.Storage.Core
         {
 
         }
-        public abstract IQueryable<T> ApplyFiltering(IQueryable<T> query, Dictionary<string, string> filterValues);
+        public abstract Task<IQueryable<T>> ApplyFilteringAsync(IQueryable<T> query, Dictionary<string, string> filterValues);
 
         public virtual async Task<ICollection<T>> GetCollectionAsync(int from, int count, string sortField, bool desc, Dictionary<string, string> filterValues, string[] includes)
         {
@@ -98,7 +98,7 @@ namespace Imkery.Data.Storage.Core
                     collection = collection.Where(b => false);
                 }
             }
-            collection = ApplyFiltering(collection, filterValues);
+            collection = await ApplyFilteringAsync(collection, filterValues);
             if (includes != null)
             {
                 foreach (string include in includes)
@@ -221,7 +221,7 @@ namespace Imkery.Data.Storage.Core
 
         public async Task<int> GetCountAsync(Dictionary<string, string> filterValues)
         {
-            return await ApplyFiltering(DbSet, filterValues).CountAsync().ConfigureAwait(false);
+            return await (await ApplyFilteringAsync(DbSet, filterValues)).CountAsync().ConfigureAwait(false);
         }
 
         public override async Task<bool> CheckIfMemberMayDeleteObject(Guid guid, IImkeryUser user)

@@ -1,1 +1,36 @@
-﻿@page "/dash"
+﻿@page "/dashboard"
+
+
+
+
+<MudText Typo="Typo.h3">Hives</MudText>
+<MudPaper Elevation="25">
+    <MudToolBar>
+        <MudIconButton Icon="@Icons.Material.Outlined.Add" Href="hive" />
+        <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" />
+    </MudToolBar>
+</MudPaper>
+
+<MudPaper>
+    @if (Hives != null)
+    {
+        foreach (var hive in Hives)
+        {
+            <HiveCard Hive="@hive" />
+        }
+    }
+</MudPaper>
+
+
+@code {
+
+    [Inject]
+    public HivesClient hivesClient { get; set; }
+
+    public ICollection<Hive> Hives { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Hives = await hivesClient.GetCollectionAsync(new FilterPagingOptions() { ItemsPerPage = int.MaxValue, Includes = new string[] { "Tags.TagDefinition" }, FilterParameters = new Dictionary<string, string>() { {"OnlyCurrentUser", "true" } } });
+    }
+}

@@ -13,7 +13,7 @@ namespace Imkery.Data.Storage
 
         public override DbSet<Location> DbSet => DbContext.Locations;
 
-        public override IQueryable<Location> ApplyFiltering(IQueryable<Location> query, Dictionary<string, string> filterValues)
+        public override async Task<IQueryable<Location>> ApplyFilteringAsync(IQueryable<Location> query, Dictionary<string, string> filterValues)
         {
             var predicate = PredicateBuilder.True<Location>();
 
