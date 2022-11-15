@@ -11,10 +11,10 @@ namespace Imkery.Server.Controllers
     [Microsoft.AspNetCore.Mvc.Route("api/hives")]
     public class HivesController : BaseController<HivesRepository, Hive>
     {
-        [Inject]
         public ActionDefinitionsRepository ActionDefinitionsRepository { get; set; }
-        public HivesController(HivesRepository repository) : base(repository)
+        public HivesController(HivesRepository repository, ActionDefinitionsRepository actionDefinitionsRepository) : base(repository)
         {
+            ActionDefinitionsRepository = actionDefinitionsRepository;
         }
 
         [HttpPost("DoAction/{hiveId}/{actionId}")]

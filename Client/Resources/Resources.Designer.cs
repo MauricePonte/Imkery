@@ -133,6 +133,42 @@ namespace Imkery.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        internal static string DeleteDialog_No {
+            get {
+                return ResourceManager.GetString("DeleteDialog_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting can not be undone are you sure?.
+        /// </summary>
+        internal static string DeleteDialog_Text {
+            get {
+                return ResourceManager.GetString("DeleteDialog_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting.
+        /// </summary>
+        internal static string DeleteDialog_Title {
+            get {
+                return ResourceManager.GetString("DeleteDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        internal static string DeleteDialog_Yes {
+            get {
+                return ResourceManager.GetString("DeleteDialog_Yes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete &apos;{0}&apos;?.
         /// </summary>
         internal static string Dialog_DeleteQuestion {

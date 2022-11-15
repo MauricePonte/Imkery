@@ -1,34 +1,95 @@
 ﻿@using Imkery.Entities
 
-<MudCard Outlined="true">
-    <MudCardMedia Height="20" />
-    <MudCardHeader>
-        <MudText Typo="Typo.h4">@string.Format(Resources.HiveCard_HiveIdentifierFormat,Hive.Identifier)</MudText>
-        <MudSpacer />
-        @*<MudIcon Icon="@Icons.Filled.Lightbulb" Title="Queen is marked" Color="@ColorConverter(Hive.Queen.IsMarked)"/>*@
-    </MudCardHeader>
-    <MudCardContent>
-        <MudStack>
-@*            @foreach (var item in Hive.Tags)
+@if (Hive != null)
+{
+
+    <MudCard Outlined="true">
+        <MudCardMedia Height="20" />
+        <MudCardHeader>
+            <MudText Typo="Typo.h4">@string.Format(Resources.HiveCard_HiveIdentifierFormat,Hive.Identifier)</MudText>
+            <MudSpacer />
+            @*<MudIcon Icon="@Icons.Filled.Lightbulb" Title="Queen is marked" Color="@ColorConverter(Hive.Queen.IsMarked)"/>*@
+        </MudCardHeader>
+        <MudCardContent>
+            <MudStack>
+                @foreach (var item in Hive.Tags)
+                {
+                    <MudPaper Class="pa-3">
+                        <MudText Typo="Typo.body1">@item.TagDefinition.Name</MudText>
+                        <MudText Typo="Typo.body2">@item.AddedOn.ToShortDateString()</MudText>
+                    </MudPaper>
+                }
+            </MudStack>
+        </MudCardContent>
+        <MudCardActions>
+            @if (Hive.OwnerId == CurrentUserId)
             {
-                <MudPaper Class="pa-3">
-                    <MudText Typo="Typo.body1">12/06/2022</MudText>
-                    <MudText Typo="Typo.body2">Algemene inspectie</MudText>
-                </MudPaper>
-            }*@
-        </MudStack>
-    </MudCardContent>
-    <MudCardActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Tertiary">@Resources.Global_SaveAction</MudButton>
-    </MudCardActions>
-</MudCard>
+                <MudIconButton Variant="Variant.Filled" Color="Color.Tertiary" Icon="@Icons.Material.Outlined.Edit" Href="@("hive/"+Hive.Id.ToString())" Class="ma-3"></MudIconButton>
+                <MudIconButton Variant="Variant.Filled" Color="Color.Tertiary" Icon="@Icons.Material.Outlined.DeleteForever" OnClick="@(async ()=> await DoDelete())" Class="ma-3"></MudIconButton>
+
+                <MudMenu Icon="@Icons.Material.Filled.AddCircle" AnchorOrigin="Origin.BottomLeft" Class="ma-3">
+                    @foreach (var action in ActionDefinitions)
+                    {
+                        <MudMenuItem OnClick="@(async ()=> await DoAction(action))">@action.Name</MudMenuItem>
+                    }
+                </MudMenu>
+            }
+
+        </MudCardActions>
+    </MudCard>
+}
 
 @code {
     [Parameter]
     public Hive Hive { get; set; }
 
+    [Inject]
+    public ActionDefinitionsClient ActionDefinitionsClient { get; set; }
+
+    [Inject]
+    public HivesClient HivesClient { get; set; }
+
+    [Inject]
+    public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    public Guid CurrentUserId { get; set; }
+
+    public ICollection<ActionDefinition> ActionDefinitions { get; set; }
+    [Inject]
+    private IDialogService DialogService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User != null)
+        {
+            CurrentUserId = new Guid(authState.User.Claims.FirstOrDefault(b => b.Type == "sub").Value);
+            ActionDefinitions = await ActionDefinitionsClient.GetCollectionAsync(new FilterPagingOptions() { ItemsPerPage = int.MaxValue });
+        }
+    }
+
     public MudBlazor.Color ColorConverter(bool param)
     {
         return param ? MudBlazor.Color.Success : MudBlazor.Color.Error;
+    }
+
+    public async Task DoAction(ActionDefinition action)
+    {
+        Hive = await HivesClient.ApplyActionToHiveAsync(Hive, action);
+    }
+
+    public async Task DoDelete()
+    {
+        bool? result = await DialogService.ShowMessageBox(
+           Resources.DeleteDialog_Title,
+           Resources.DeleteDialog_Text,
+           yesText: Resources.DeleteDialog_Yes, cancelText: Resources.DeleteDialog_No);
+        if(result.HasValue && result.Value)
+        {
+            await HivesClient.DeleteAsync(Hive.Id);
+            Hive = null;
+        }
+        StateHasChanged();
     }
 }

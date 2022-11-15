@@ -141,6 +141,18 @@
   <data name="Dashboard_Title" xml:space="preserve">
     <value>Dashboard</value>
   </data>
+  <data name="DeleteDialog_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="DeleteDialog_Text" xml:space="preserve">
+    <value>Deleting can not be undone are you sure?</value>
+  </data>
+  <data name="DeleteDialog_Title" xml:space="preserve">
+    <value>Deleting</value>
+  </data>
+  <data name="DeleteDialog_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
   <data name="Dialog_DeleteQuestion" xml:space="preserve">
     <value>Are you sure you want to delete '{0}'?</value>
   </data>
