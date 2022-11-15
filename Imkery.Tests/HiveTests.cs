@@ -101,8 +101,8 @@ namespace Imkery.Tests
 
             savedHive = await repository.GetItemByIdAsync(hive.Id);
             var appliedActionToHive = await repository.ApplyActionToHiveAsync(savedHive, actionDefinition);
-            Assert.That(appliedActionToHive.Tags.First().AlwaysValid, "Tag not created right");
-            Assert.That((appliedActionToHive.Tags.Last().ValidTill - DateTime.UtcNow).Minutes > 30, "Tag not created right");
+            Assert.That(appliedActionToHive.Tags.Where(b => b.AlwaysValid).Count() == 1, "Tag not created right");
+            Assert.That(appliedActionToHive.Tags.Where(b => (b.ValidTill - DateTime.UtcNow).Minutes > 30).Count() == 1, "Tag not created right");
         }
     }
 }
