@@ -1,5 +1,6 @@
 ﻿using Imkery.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,11 @@ namespace Imkery.Data.Storage.Core
         public ImkeryDbContext(DbContextOptions<ImkeryDbContext> options)
              : base(options)
         {
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Hive>().OwnsMany(b=> b.Tags);
         }
 
         public DbSet<Location> Locations { get; set; }
